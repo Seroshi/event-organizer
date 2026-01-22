@@ -40,5 +40,14 @@
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true,
-  }
+  },
+  "include": [
+    "resources/js/**/*.ts",
+    "resources/js/**/*.d.ts",
+    "resources/js/**/*.vue" // Add this if you ever use Vue
+  ],
+  "exclude": [
+    "node_modules",
+    "public/build"
+  ]
 }
