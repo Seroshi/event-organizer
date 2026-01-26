@@ -1,10 +1,14 @@
 export interface Event {
     id: number;
     title: string;
+    category_id: number;
     image_path: string | null;
-    starts_at: string; // Dates are sent as strings in JSON
-    is_fully_booked: boolean;
+    start_time: string; 
+    content: string;
+    status: boolean;
+    updated_at: string;
     created_at: string;
+    deleted_at: string;
 }
 
 export interface User {
