@@ -2,6 +2,8 @@
 
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Livewire\Attributes\Computed;
+use App\Services\EventService;
 
 new class extends Component
 {
@@ -9,7 +11,7 @@ new class extends Component
 
     // Form fields starting value
     public $title = "";
-    public $category = "";
+    public $category_id = null;
     public $image = null;
     public $start_time = null;
     public $content = "";
@@ -17,21 +19,28 @@ new class extends Component
     
     public $statusLabel = 'Show event';
 
+    #[Computed]
+    public function allCategories()
+    {
+        return \App\Models\Category::all();
+    }
+
     // Change status label text based on switch value
-    function statusSwitch(){
+    function statusSwitch()
+    {
         if($this->status) $this->statusLabel = 'Show event';
         else $this->statusLabel = 'Hide event';
     }
 
     // Process the form data upon button click
-    function save()
+    function save(EventService $service)
     {
 
         // Validate all form fields
         $validated = $this->validate(
             [ 
                 'title' => 'required|min:3',
-                'category' => 'required',
+                'category_id' => 'required',
                 'image' => 'nullable|max:2048',
                 'start_time' => 'required',
                 'content' => 'required',
@@ -40,12 +49,14 @@ new class extends Component
             [
                 'title.required' => 'Een titel is verplicht',
                 'title.min' => 'Een titel moet minimaal 3 karakters hebben',
-                'category.required' => 'Een categorie is verplicht',
+                'category_id.required' => 'Een categorie is verplicht',
                 'image.max' => 'Afbeelding mag niet groter dan 2MB',
                 'start_time.required' => 'Een start tijd is verplicht',
                 'content.required' => 'Content is verplicht',
             ]
         );
+
+        return $service->createEvent($validated, $this->image);
 
         return dd( $validated );
     }
@@ -72,16 +83,13 @@ new class extends Component
 
             <!-- Category select options -->
             <div class="mb-6">
-                <flux:select wire:model="category"
+                <flux:select wire:model="category_id"
                     label="Category" 
                     placeholder="Choose a category"
                 >
-                    <flux:select.option>Anime</flux:select.option>
-                    <flux:select.option>Games</flux:select.option>
-                    <flux:select.option>Music</flux:select.option>
-                    <flux:select.option>Family</flux:select.option>
-                    <flux:select.option>Special</flux:select.option>
-                    <flux:select.option>Workshop</flux:select.option>
+                    @foreach($this->allCategories as $category)
+                        <flux:select.option value="{{ $category->id }}">{{ $category->name }}</flux:select.option>
+                    @endforeach
                 </flux:select>
             </div>
 

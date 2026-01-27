@@ -15,4 +15,9 @@ class Event extends Model
     protected $casts = [
         'start_time' => 'datetime', // option: datetime:H:i
     ];
+
+    public function category()
+    {
+        return $this->BelongsTo(Category::class, 'category_id');
+    }
 }

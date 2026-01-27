@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('events', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->integer('category');
-            $table->string('image_path')->nullable();
+            $table->foreignId('category_id')->nullOnDelete()->constrained();
+            $table->string('image')->nullable();
             $table->date('start_time')->nullable();
             $table->longText('content')->nullable();
             $table->boolean('status')->nullable();
