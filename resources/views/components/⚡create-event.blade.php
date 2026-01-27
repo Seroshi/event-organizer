@@ -4,6 +4,7 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\Attributes\Computed;
 use App\Services\EventService;
+use App\Models\Event;
 
 new class extends Component
 {
@@ -11,31 +12,30 @@ new class extends Component
 
     // Form fields starting value
     public $title = "";
-    public $category_id = null;
+    public $category_id = "";
     public $image = null;
     public $start_time = null;
     public $content = "";
     public $status = true;
     
+    public ?Event $event = null;
     public $statusLabel = 'Show event';
+    private $action = '';
 
-    #[Computed]
-    public function allCategories()
-    {
-        return \App\Models\Category::all();
-    }
-
-    // Change status label text based on switch value
-    function statusSwitch()
-    {
-        if($this->status) $this->statusLabel = 'Show event';
-        else $this->statusLabel = 'Hide event';
+    public function mount(Event $event){
+        if($event->exists){
+            $this->event = $event;
+            $this->title = $event->title;
+            $this->category_id = $event->category_id;
+            $this->start_time = $event->start_time->format('Y-m-d\TH:i');
+            $this->content = $event->content;
+            $this->status = (bool) $event->status;
+        }
     }
 
     // Process the form data upon button click
     function save(EventService $service)
     {
-
         // Validate all form fields
         $validated = $this->validate(
             [ 
@@ -56,9 +56,33 @@ new class extends Component
             ]
         );
 
-        return $service->createEvent($validated, $this->image);
+        // If no event is found, create a new one
+        if(!$this->event) $service->createEvent($validated, $this->image);
 
-        return dd( $validated );
+        // Else update the existing event
+        else $service->updateEvent($this->event, $validated);
+        
+        return dd( 'Event created!' );
+    }
+
+    #[Computed]
+    public function allCategories(){ 
+        return \App\Models\Category::all(); 
+    }
+
+    #[Computed]
+    public function title(){ 
+        return $this->event ? 'Bewerk evenement' : 'Creëer" evenement'; 
+    }
+
+    #[Computed]
+    public function statusLabel(){
+        return $this->status ? 'Evenement zichtbaar' : 'Evenement verborgen';
+    }
+
+    #[Computed]
+    public function formButton(){ 
+        return $this->event ? 'Update evenement' : 'Creëer evenement'; 
     }
 };
 ?>
@@ -69,8 +93,7 @@ new class extends Component
         <h2 class="text-xl styling-h mb-8">
             <div class="flex items-center gap-2">
                 <span><flux:icon.chevron-double-down variant="solid" class="size-6" /></span>
-                <span>Create next event</span>
-                
+                <span>{{ $this->title() }}</span>
             </div>
         </h2>
 
@@ -78,28 +101,30 @@ new class extends Component
 
             <!-- Title text input -->
             <div class="mb-6">
-                <flux:input wire:model.live="title" type="text" label="Title" />
+                <flux:input wire:model.live="title" type="text" label="Titel" />
             </div>
 
             <!-- Category select options -->
             <div class="mb-6">
                 <flux:select wire:model="category_id"
-                    label="Category" 
-                    placeholder="Choose a category"
+                    label="Categorie" 
+                    placeholder="Kies een categorie"
                 >
                     @foreach($this->allCategories as $category)
-                        <flux:select.option value="{{ $category->id }}">{{ $category->name }}</flux:select.option>
+                        <flux:select.option value="{{ $category->id }}">
+                            {{ $category->name }}
+                        </flux:select.option>
                     @endforeach
                 </flux:select>
             </div>
 
             <!-- Image file upload -->
             <div class="mb-6">
-                <flux:input type="file" wire:model="image" label="Image upload" class="mb-4"/>
+                <flux:input type="file" wire:model="image" label="Afbeelding uploaden" class="mb-4"/>
 
                 {{-- Show a loading state while the temp file is uploading --}}
                 <div wire:loading wire:target="image" class="text-blue-500 text-xs mt-1">
-                    Uploading image...
+                    Upload afbeelding...
                 </div>
 
                 @if ($image)
@@ -111,13 +136,13 @@ new class extends Component
             <!-- Start_time date selector -->
             <div class="mb-6">
                 <flux:input 
-                    type="datetime-local" wire:model="start_time" label="Event Date" 
+                    type="datetime-local" wire:model="start_time" label="Begintijd" 
                 />
             </div>
 
             <!-- Content trix-editor -->
             <div class="mb-6" >
-                <label>Description</label>
+                <label>Beschrijving</label>
                 <div wire:ignore class="prose mt-2" 
                     x-data="{ content: @entangle('content') }"
                     {{-- Make sure to wait until trix is fully updated --}}
@@ -141,16 +166,16 @@ new class extends Component
 
             <!-- Status switch -->
             <div class="mb-6 w-full sm:w-[50%]">
-                <flux:switch wire:model="status" wire:click="statusSwitch"
-                    label="{{ $statusLabel }}" 
-                    description="Make this event visible or invisible for the public"
+                <flux:switch wire:model.live="status"
+                    :label="$this->statusLabel()" 
+                    description="Maak dit evenement zichtbaar of verborgen voor het publiek"
                 />
             </div>
 
             <!-- Submit button -->
             <flux:button type="submit" class="cursor-pointer color-sub transition delay-2s mt-6">
                 <div class="flex items-center gap-x-1">
-                    <span>Create event</span>
+                    <span>{{ $this->formButton() }}</span>
                     <flux:icon.check class="size-4"/>
                 </div>
             </flux:button>

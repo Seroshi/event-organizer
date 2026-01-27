@@ -15,7 +15,8 @@ Route::get('/', function () {
 //     return view('create-event'); // This should be the page that contains your component
 // });
 
-Volt::route('/events', 'create-event')->name('events');
+Volt::route('/events/create', 'create-event')->name('events');
+Volt::route('/events/{event}/edit', 'create-event')->name('events');
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
