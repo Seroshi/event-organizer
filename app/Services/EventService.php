@@ -11,18 +11,18 @@ class EventService
    /**
     * Handle the core logic for creating an event.
     */
-   public function createEvent(array $data, $image = null): Event
+   public function createEvent(array $data): Event
    {
-      // 1. Process the image if it exists
-      if ($image) {
-         $data['image'] = $image->store('events', 'public');
-      }
 
-      // 2. Ensure the date is a Carbon instance 
-      $data['start_time'] = Carbon::parse($data['start_time']);
-
-      // 3. Create the record in the database
-      return Event::create($data);
+      // Create the record in the database and ensure the correct types
+      return Event::create([
+        'title'       => $data['title'],
+        'category_id' => (int) $data['category_id'],
+        'image'       => $data['image'] ?? null,
+        'start_time'  => Carbon::parse($data['start_time']),
+        'content'     => $data['content'],
+        'status'      => (bool) ($data['status'] ?? false),
+      ]);
    }
 
    /**
@@ -38,19 +38,14 @@ class EventService
       return tap($event)->update($data);
    }
 
-   /**
-    * Logic for calculating time remaining (useful for your TS countdown)
-    */
-   public function getTimeRemaining(Event $event): array
+   public function getSmartCountdown(Event $event): string
    {
-      $diff = now()->diff($event->starts_at);
+      $now = now();
+      $start = $event->start_time;
+      $past = $now->greaterThan($start);
+      $text = ($past) ? ' geleden' : ' te gaan'; 
 
-      return [
-         'days'    => $diff->d,
-         'hours'   => $diff->h,
-         'minutes' => $diff->i,
-         'seconds' => $diff->s,
-         'is_past' => now()->greaterThan($event->starts_at),
-      ];
+      return $start->locale('nl')->diffForHumans($now, true) . $text;
    }
+   
 }

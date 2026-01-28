@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Services\EventService;
 
 class Event extends Model
 {
@@ -13,7 +14,9 @@ class Event extends Model
     protected $guarded = [];  
 
     protected $casts = [
-        'start_time' => 'datetime', // option: datetime:H:i
+        'category_id' => 'integer',
+        'start_time' => 'datetime:H:i', // option: datetime:H:i
+        'status'     => 'boolean',
     ];
 
     public function category()

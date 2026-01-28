@@ -57,7 +57,7 @@ new class extends Component
         );
 
         // If no event is found, create a new one
-        if(!$this->event) $service->createEvent($validated, $this->image);
+        if(!$this->event) $service->createEvent($validated);
 
         // Else update the existing event
         else $service->updateEvent($this->event, $validated);
@@ -72,7 +72,12 @@ new class extends Component
 
     #[Computed]
     public function title(){ 
-        return $this->event ? 'Bewerk evenement' : 'Creëer" evenement'; 
+        return $this->event ? 'Bewerk deze Evenement' : 'Evenement aanmaken'; 
+    }
+
+    #[Computed]
+    public function titleIcon(){ 
+        return $this->event ? 'pencil-square' : 'plus'; 
     }
 
     #[Computed]
@@ -92,7 +97,9 @@ new class extends Component
 
         <h2 class="text-xl styling-h mb-8">
             <div class="flex items-center gap-2">
-                <span><flux:icon.chevron-double-down variant="solid" class="size-6" /></span>
+                <span>
+                    <x-dynamic-component :component="'flux::icon.' . $this->titleIcon" variant="solid" class="size-6" />
+                </span>
                 <span>{{ $this->title() }}</span>
             </div>
         </h2>
@@ -118,6 +125,13 @@ new class extends Component
                 </flux:select>
             </div>
 
+            <!-- Start_time date selector -->
+            <div class="mb-6">
+                <flux:input 
+                    type="datetime-local" wire:model="start_time" label="Begintijd" 
+                />
+            </div>
+
             <!-- Image file upload -->
             <div class="mb-6">
                 <flux:input type="file" wire:model="image" label="Afbeelding uploaden" class="mb-4"/>
@@ -131,13 +145,6 @@ new class extends Component
                     {{-- Show the temporary preview --}}
                     <img src="{{ $image->temporaryUrl() }}" class="size-[50%] object-cover">
                 @endif
-            </div>
-
-            <!-- Start_time date selector -->
-            <div class="mb-6">
-                <flux:input 
-                    type="datetime-local" wire:model="start_time" label="Begintijd" 
-                />
             </div>
 
             <!-- Content trix-editor -->

@@ -57,7 +57,7 @@
 }
 
 [data-flux-label] {
-    @apply  !mb-0 !leading-tight;
+    @apply  mb-0! leading-tight!;
 }
 
 input:focus[data-flux-control],
@@ -92,6 +92,8 @@ ui-label{
 trix-editor{
     color: #dfdfdf;
     background-color: #323232;
+    height: 400px !important;
+    overflow-y: auto;
 }
 trix-editor h1{
     color: #dfdfdf;
@@ -111,11 +113,11 @@ trix-editor blockquote{
     background-color: var(--color-main);
     filter: brightness(1);
 }
-.color-main:hover{
+.hover-color-main:hover{
     filter: brightness(1.2);
 }
 .color-sub{
-    background-color: #398be2;
+    background-color: #2a7fda;
     filter: brightness(1);
 }
 .color-sub:hover{

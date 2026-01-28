@@ -3,20 +3,11 @@
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
-
-// Route::get('/events', function () {
-//     return view('events');
-// })->name('events');
-
-// Route::get('/events', function () {
-//     return view('create-event'); // This should be the page that contains your component
-// });
-
-Volt::route('/events/create', 'create-event')->name('events');
-Volt::route('/events/{event}/edit', 'create-event')->name('events');
+Volt::route('/events', 'event-index')->name('event.index');
+Volt::route('/events/create', 'event-manage')->name('event.create');
+Volt::route('/events/list', 'event-list')->name('event.list');
+Volt::route('/events/{event}', 'event-show')->name('event.show');
+Volt::route('/events/{event}/edit', 'event-manage')->name('event.edit');
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])

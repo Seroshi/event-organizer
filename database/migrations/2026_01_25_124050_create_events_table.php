@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('title');
             $table->foreignId('category_id')->nullOnDelete()->constrained();
             $table->string('image')->nullable();
-            $table->date('start_time')->nullable();
+            $table->datetime('start_time')->nullable();
             $table->longText('content')->nullable();
             $table->boolean('status')->nullable();
             $table->timestamps();
