@@ -7,9 +7,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Services\EventService;
 
-class Event extends Model
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\Image\Enums\Fit; // New in v3/v11
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+
+class Event extends Model implements HasMedia
 {
-    use SoftDeletes;
+    use SoftDeletes, InteractsWithMedia;
 
     protected $guarded = [];  
 
@@ -22,5 +27,21 @@ class Event extends Model
     public function category()
     {
         return $this->BelongsTo(Category::class, 'category_id');
+    }
+
+    // Spatie Image: the BUCKET rules here
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('banners')
+            ->singleFile() 
+            ->withResponsiveImages();
+    }
+
+    // Spatie Image: the RESIZING rules here
+    public function registerMediaConversions(?Media $media = null): void
+    {
+        $this->addMediaConversion('thumb')
+            ->fit(Fit::Contain, 300, 300)
+            ->nonQueued();
     }
 }

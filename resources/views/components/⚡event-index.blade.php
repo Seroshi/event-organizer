@@ -9,7 +9,7 @@ new class extends Component
 {
 	#[Computed]
 	public function events(){
-		return Event::all();
+		return Event::where('status', true)->get()->sortBy('start_time');
 	}
 
 	public function countdown($event){
@@ -23,24 +23,26 @@ new class extends Component
    <div class="my-8">
 
 		{{-- Admin quick options --}}
-		<section class="mb-6">
-			<p class="text-sm text-gray-300">Admin opties:</p>
-			<div class="flex gap-3 mt-1">
-				<a href="{{ route('event.list') }}" class="flex gap-2 items-center bg-gray-700 hover:brightness-130 transition delay-2s px-3 py-1 rounded-md">
-					<flux:icon.list-bullet variant="solid" class="size-5" />
-					<p>Bekijk alle</p>
-				</a>
-				<a href="{{ route('event.create') }}" class="flex gap-2 items-center bg-gray-700 hover:brightness-130 transition delay-2s px-3 py-1 rounded-md">
-					<flux:icon.plus variant="solid" class="size-4" />
-					<p>Maak nieuwe aan</p>
-				</a>
+		<section class="mb-6 text-center text-sm">
+			<p class="text-gray-400">Admin opties:</p>
+			<div class="inline-block">
+				<div class="flex justify-center rounded-md gap-1 p-1 bg-gray-700">
+					<a href="{{ route('event.list') }}" class="flex gap-1 items-center bg-zinc-800 hover:bg-gray-500 transition delay-2s px-2 py-1 rounded-md">
+						<flux:icon.list-bullet variant="solid" class="size-5" />
+						<p>Zie alle evenementen</p>
+					</a>
+					<a href="{{ route('event.create') }}" class="flex gap-1 items-center bg-zinc-800 hover:bg-gray-500 transition delay-2s px-2 py-1 rounded-md">
+						<flux:icon.plus variant="solid" class="size-4" />
+						<p>Maak nieuwe aan</p>
+					</a>
+				</div>
 			</div>
 		</section>
 
-		<section>
+		<section class="flex flex-col">
 
 			<!-- Events: title -->
-			<h2 class="text-xl styling-h mb-8">
+			<h2 class="text-xl styling-h mb-8 mx-auto text-center">
 				<div class="flex items-center gap-2">
 					<span><flux:icon.calendar variant="solid" class="size-6" /></span>
 					<span>Aankomende evenementen</span>
@@ -55,15 +57,19 @@ new class extends Component
 				<a href="{{ route('event.show', $event->id) }}" class="group">
 					<div class="border rounded-lg cursor-pointer overflow-hidden transition delay-2s group-hover:bg-gray-800">
 						<div class="bg-gray-600 flex items-center justify-center aspect-3/2 w-full">
-							<!-- <img src="{{ asset('storage/'.$event->image) }}" 
-								alt="{{ $event->title }}" class="w-full h-48 object-cover rounded-md mb-4" 
-							/> -->
+							@if($event->hasMedia('banners'))
+							{{ $event->getFirstMedia('banners') }}
+							@else
 							<flux:icon.photo variant="solid" class="size-20 text-gray-400" />
+							@endif
 						</div>
 						<div class="p-4 text-center">
 							<p class="text-xs text-gray-400">#{{ $event->category->name }}</p>
 							<h2 class="text-md font-semibold line-clamp-1 mb-1">{{ $event->title }}</h2>
-							<p wire:poll.60s class="text-sm">{{ $this->countdown($event) }}</p>
+							<div class="line-clamp-1">
+								<span class="text-sm color-main rounded-md px-2 py-0.5 mr-2">{{ $event->start_time->format('d M') }}</span>
+								<span wire:poll.60s class="text-sm">{{ $this->countdown($event) }}</span>
+							</div>
 						</div>
 					</div>
 				</a>

@@ -56,13 +56,34 @@ new class extends Component
             ]
         );
 
-        // If no event is found, create a new one
-        if(!$this->event) $service->createEvent($validated);
+        // If no existing event is found from the route
+        if(!$this->event){
 
-        // Else update the existing event
-        else $service->updateEvent($this->event, $validated);
+            // Create the event
+            $newEvent = $service->createEvent($validated);
+
+            // Upload the image if provided by the user
+            if($this->image) $service->uploadImage($newEvent, $this->image);
+
+            // Dispatch a success notification
+            session()->flash('success', 'Evenement succesvol aangemaakt!');
+
+        } 
+
+        else{
+
+            // update the existing event
+            $newEvent = $service->updateEvent($this->event, $validated);
+
+            // Upload image if provided by the user
+            if($this->image) $service->uploadImage($newEvent, $this->image);
+
+            // Dispatch a success notification
+            session()->flash('success', 'Evenement succesvol aangepast!');
+            
+        } 
         
-        return dd( 'Event created!' );
+        return $this->redirectRoute('event.list', navigate: true);
     }
 
     #[Computed]
@@ -95,14 +116,12 @@ new class extends Component
 <div class="w-full sm:w-2xl mx-auto p-6">
     <section class="my-8">
 
-        <h2 class="text-xl styling-h mb-8">
-            <div class="flex items-center gap-2">
-                <span>
-                    <x-dynamic-component :component="'flux::icon.' . $this->titleIcon" variant="solid" class="size-6" />
-                </span>
-                <span>{{ $this->title() }}</span>
-            </div>
-        </h2>
+        <!-- Breadcrumbs -->
+        <section class="text-sm text-gray-400 flex gap-1 items-center mb-10">
+            <a href="{{ route('event.index') }}" class="hover:text-gray-200">Evenementen</a>
+            <flux:icon.chevron-right variant="solid" class="size-4" />
+            <span class="text-gray-200">{{ $this->title() }}</span>
+        </section>
 
         <form wire:submit.prevent="save">
 
@@ -134,7 +153,13 @@ new class extends Component
 
             <!-- Image file upload -->
             <div class="mb-6">
-                <flux:input type="file" wire:model="image" label="Afbeelding uploaden" class="mb-4"/>
+                @if($this->event?->hasMedia('banners') && !$this->image)
+                <label class="font-medium">Afbeelding uploaden</label>
+                <div class="sm:w-[50%] pt-2 pb-3">
+                    {{ $this->event->getFirstMedia('banners') }}
+                </div>
+                @endif
+                <flux:input type="file" wire:model="image" class="mb-4"/>
 
                 {{-- Show a loading state while the temp file is uploading --}}
                 <div wire:loading wire:target="image" class="text-blue-500 text-xs mt-1">

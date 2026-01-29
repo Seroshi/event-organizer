@@ -34,7 +34,7 @@ new class extends Component
 		</section>
 
       <!-- Breadcrumbs -->
-      <section class="text-sm text-gray-400 flex gap-1 items-center mb-4">
+      <section class="text-sm text-gray-400 flex gap-1 items-center mb-10">
          <a href="{{ route('event.index') }}" class="hover:text-gray-200">Evenementen</a>
          <flux:icon.chevron-right variant="solid" class="size-4" />
          <span class="text-gray-200">{{ $this->event->title }}</span>
@@ -43,9 +43,9 @@ new class extends Component
       <section>
 
          <!-- Banner image -->
-         <div class="mb-4">
-            @if($this->event->image)
-            <img src="" alt="">testing
+         <div class="mb-6">
+            @if($this->event->hasMedia('banners'))
+            {{ $this->event->getFirstMedia('banners') }}
             @else
             <div class="bg-gray-600 flex items-center justify-center aspect-video w-full">
                 <flux:icon.photo variant="solid" class="size-20 text-gray-400" />
@@ -54,11 +54,17 @@ new class extends Component
          </div>
 
          <!-- Event title -->
-         <h2 class="text-2xl">{{ $this->event->title }}</h2>
-         <p class="text-gray-400 font-light mb-1">#{{ $this->event->category?->name }}</p>
-         
-         <span class="color-main inline-block rounded-sm px-2 py-0.5">{{ $this->event->start_time->format('D d M Y') }}</span>
-         <span wire:poll.60s class="text-gray-400 ml-2">{{ $this->countdown }}</span>
+         <p class="text-gray-400 font-light">#{{ $this->event->category?->name }}</p>
+         <h2 class="text-2xl mb-6">{{ $this->event->title }}</h2>
+
+         <div class="mb-6">
+            <p class="color-main inline-block rounded-sm px-2 py-0.5">{{ $this->event->start_time->format('D d M Y') }}</p>
+            <span wire:poll.60s class="text-gray-400 ml-2">{{ $this->countdown }}</span>
+         </div>
+
+         <div>
+            {!! $this->event->content !!}
+         </div>
 
       </section>
 

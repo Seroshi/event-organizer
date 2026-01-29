@@ -6,6 +6,8 @@ use App\Models\Event;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+
 class EventService
 {
    /**
@@ -18,7 +20,6 @@ class EventService
       return Event::create([
         'title'       => $data['title'],
         'category_id' => (int) $data['category_id'],
-        'image'       => $data['image'] ?? null,
         'start_time'  => Carbon::parse($data['start_time']),
         'content'     => $data['content'],
         'status'      => (bool) ($data['status'] ?? false),
@@ -46,6 +47,15 @@ class EventService
       $text = ($past) ? ' geleden' : ' te gaan'; 
 
       return $start->locale('nl')->diffForHumans($now, true) . $text;
+   }
+
+   /**
+    * Handle the logic for uploading an image with Spatie Media.
+    */
+   public function uploadImage(Event $event, $file): media
+   {
+      // Spatie handles the TemporaryUploadedFile automatically
+      return $event->addMedia($file)->toMediaCollection('banners');
    }
    
 }
