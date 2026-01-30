@@ -9,7 +9,10 @@ new class extends Component
 {
 	#[Computed]
 	public function events(){
-		return Event::where('status', true)->get()->sortBy('start_time');
+		return Event::with('media')
+			->where('status', true)
+			->get()
+			->sortBy('start_time');
 	}
 
 	public function countdown($event){
@@ -20,7 +23,8 @@ new class extends Component
 
 
 <div class="w-full md:w-3xl mx-auto p-6">
-   <div class="my-8">
+   <div class="my-4">
+
 
 		{{-- Admin quick options --}}
 		<section class="mb-6 text-center text-sm">
@@ -54,7 +58,7 @@ new class extends Component
 
 				<!-- Events: Collection -->
 				@foreach($this->events as $event)
-				<a href="{{ route('event.show', $event->id) }}" class="group">
+				<a href="{{ route('event.show', $event->id) }}" class="group" wire:key="event-{{ $event->id }}">
 					<div class="border rounded-lg cursor-pointer overflow-hidden transition delay-2s group-hover:bg-gray-800">
 						<div class="bg-gray-600 flex items-center justify-center aspect-3/2 w-full">
 							@if($event->hasMedia('banners'))

@@ -21,6 +21,7 @@ class EventService
         'title'       => $data['title'],
         'category_id' => (int) $data['category_id'],
         'start_time'  => Carbon::parse($data['start_time']),
+        'end_time'    => ($data['end_time']) ? Carbon::parse($data['end_time']) : null,
         'content'     => $data['content'],
         'status'      => (bool) ($data['status'] ?? false),
       ]);
@@ -31,7 +32,6 @@ class EventService
     */
    public function updateEvent(Event $event, array $data): Event
    {
-
       // 1. Ensure the date is a Carbon instance 
       $data['start_time'] = Carbon::parse($data['start_time']);
 
@@ -39,14 +39,54 @@ class EventService
       return tap($event)->update($data);
    }
 
+   /**
+    * Handle the core logic for soft and force deleting an event.
+    */
+   public function delete(Event $event, $force = false): bool{
+
+      try{
+         return $event->delete();
+      } catch (\Exception $e){
+         Log::error('Failed to delete event: ' . $e.getMessage());
+         return false;
+      }
+
+      return $force ? $event->forceDelete() : $event->delete();
+   }
+
+   /**
+    * Handle the core logic for restoring an event.
+    */
+   public function restore(Event $event): bool{
+      try{
+         return $event->restore();
+      } catch (\Exception $e){
+         Log::error('Failed to delete event: ' . $e.getMessage());
+         return false;
+      }
+   }
+
    public function getSmartCountdown(Event $event): string
    {
       $now = now();
       $start = $event->start_time;
-      $past = $now->greaterThan($start);
+      $end = $event->end_time;
+      $past = ($end) ? $now->greaterThan($end) : $now->greaterThan($start);
       $text = ($past) ? ' geleden' : ' te gaan'; 
 
-      return $start->locale('nl')->diffForHumans($now, true) . $text;
+      // Check if event is ungoing
+      if($past && $end && !$now->greaterThan($end)){
+         return 'Nu aan de gang';
+      }
+
+      // Show countdown from now 
+      if($end && $past) {
+         return $end->diffForHumans($now, true) . $text;
+      }
+      else {
+         return $start->diffForHumans($now, true) . $text;
+      }
+      
    }
 
    /**

@@ -52,6 +52,35 @@
     }
 }
 
+@layer utilities {
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    .hide-scrollbar-until-hover::-webkit-scrollbar {
+        width: 6px; /* Adjust size as needed */
+        height: 6px;
+    }
+
+    /* Show scrollbar on hover */
+    .hide-scrollbar-until-hover:hover::-webkit-scrollbar {
+        display: block;
+    }
+
+    .hide-scrollbar-until-hover:hover::-webkit-scrollbar-track{
+        background-color: #303030;
+    }
+    /* Hide by making it transparent */
+    .hide-scrollbar-until-hover::-webkit-scrollbar-thumb {
+        background-color: rgba(75, 85, 99, 0.0);
+        border-radius: 6px;
+    }
+
+    /* Show by making it solid on hover */
+    .hide-scrollbar-until-hover:hover::-webkit-scrollbar-thumb {
+        background-color: rgba(78, 81, 84, 0.952);
+        cursor: pointer;
+    }
+
+}
+
 [data-flux-field]:not(ui-radio, ui-checkbox) {
     @apply grid gap-2;
 }
@@ -68,6 +97,10 @@ select:focus[data-flux-control] {
 
 ui-label{
     font-size: 16px;
+}
+
+a{
+    cursor: pointer;
 }
 
 .trix-button-group{
@@ -133,6 +166,14 @@ trix-editor blockquote{
 
 input{
     outline: #57a8fd;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+.no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
 }
 
 /* \[:where(&)\]:size-4 {

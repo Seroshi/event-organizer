@@ -15,6 +15,7 @@ new class extends Component
     public $category_id = "";
     public $image = null;
     public $start_time = null;
+    public $end_time = null;
     public $content = "";
     public $status = true;
     
@@ -27,7 +28,8 @@ new class extends Component
             $this->event = $event;
             $this->title = $event->title;
             $this->category_id = $event->category_id;
-            $this->start_time = $event->start_time->format('Y-m-d\TH:i');
+            $this->start_time = $event->start_time?->format('Y-m-d\TH:i');
+            $this->end_time = $event->end_time?->format('Y-m-d\TH:i');
             $this->content = $event->content;
             $this->status = (bool) $event->status;
         }
@@ -42,7 +44,8 @@ new class extends Component
                 'title' => 'required|min:3',
                 'category_id' => 'required',
                 'image' => 'nullable|max:2048',
-                'start_time' => 'required',
+                'start_time' => 'required|date', 
+                'end_time' => 'nullable|date|after:start_date',
                 'content' => 'required',
                 'status' => 'nullable'
             ],
@@ -114,7 +117,7 @@ new class extends Component
 ?>
 
 <div class="w-full sm:w-2xl mx-auto p-6">
-    <section class="my-8">
+    <section class="my-4">
 
         <!-- Breadcrumbs -->
         <section class="text-sm text-gray-400 flex gap-1 items-center mb-10">
@@ -144,22 +147,27 @@ new class extends Component
                 </flux:select>
             </div>
 
-            <!-- Start_time date selector -->
+            <!-- Start & End date selector -->
             <div class="mb-6">
-                <flux:input 
-                    type="datetime-local" wire:model="start_time" label="Begintijd" 
-                />
+                <div class="flex flex-col sm:flex-row gap-x-2 gap-y-3">
+                    <span class="flex-1">
+                        <flux:input type="datetime-local" wire:model="start_time" label="Begintijd" />
+                    </span>
+                    <span class="flex-1">
+                        <flux:input type="datetime-local" wire:model="end_time" label="Eindtijd" />
+                    </span>
+                </div>
             </div>
 
             <!-- Image file upload -->
             <div class="mb-6">
-                @if($this->event?->hasMedia('banners') && !$this->image)
                 <label class="font-medium">Afbeelding uploaden</label>
+                @if($this->event?->hasMedia('banners') && !$this->image)
                 <div class="sm:w-[50%] pt-2 pb-3">
                     {{ $this->event->getFirstMedia('banners') }}
                 </div>
                 @endif
-                <flux:input type="file" wire:model="image" class="mb-4"/>
+                <flux:input type="file" wire:model="image" class="mt-2 mb-4"/>
 
                 {{-- Show a loading state while the temp file is uploading --}}
                 <div wire:loading wire:target="image" class="text-blue-500 text-xs mt-1">

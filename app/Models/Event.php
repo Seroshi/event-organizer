@@ -21,6 +21,7 @@ class Event extends Model implements HasMedia
     protected $casts = [
         'category_id' => 'integer',
         'start_time' => 'datetime:H:i', // option: datetime:H:i
+        'end_time' => 'datetime:H:i',
         'status'     => 'boolean',
     ];
 
