@@ -23,15 +23,27 @@ new class extends Component
 <div class="w-full md:w-2xl mx-auto p-6">
    <div class="my-8">
 
-      <section class="mb-6">
-			<p class="text-sm text-gray-300">Admin opties:</p>
-			<div class="flex gap-3 mt-1">
-				<a href="{{ route('event.edit', $this->event->id) }}" class="flex gap-2 items-center bg-gray-700 hover:brightness-130 transition delay-2s px-3 py-1 rounded-md">
-					<flux:icon.pencil-square variant="solid" class="size-4" />
-					<p>Bewerk deze</p>
-				</a>
+      @organizer
+      <section class="mb-6 text-sm">
+			<p class="text-gray-400">Admin opties:</p>
+			<div class="inline-block">
+				<div class="flex justify-center rounded-md gap-1 p-1 bg-gray-700">
+					<a href="{{ route('event.edit', $this->event->id) }}" class="flex gap-1 items-center bg-zinc-800 hover:bg-gray-500 transition delay-2s px-2 py-1 rounded-md">
+						<flux:icon.pencil-square variant="solid" class="size-5" />
+						<p>Bewerk deze</p>
+					</a>
+               <a href="{{ route('event.list') }}" class="flex gap-1 items-center bg-zinc-800 hover:bg-gray-500 transition delay-2s px-2 py-1 rounded-md">
+						<flux:icon.list-bullet variant="solid" class="size-5" />
+						<p>Zie alle evenementen</p>
+					</a>
+					<a href="{{ route('event.create') }}" class="flex gap-1 items-center bg-zinc-800 hover:bg-gray-500 transition delay-2s px-2 py-1 rounded-md">
+						<flux:icon.plus variant="solid" class="size-4" />
+						<p>Maak nieuwe aan</p>
+					</a>
+				</div>
 			</div>
 		</section>
+      @endorganizer
 
       <!-- Breadcrumbs -->
       <section class="text-sm text-gray-400 flex gap-1 items-center mb-10">
@@ -62,7 +74,7 @@ new class extends Component
             <span wire:poll.60s class="text-gray-400 ml-2">{{ $this->countdown }}</span>
          </div>
 
-         <div>
+         <div class="show-content">
             {!! $this->event->content !!}
          </div>
 

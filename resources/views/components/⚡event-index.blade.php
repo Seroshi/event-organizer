@@ -25,8 +25,7 @@ new class extends Component
 <div class="w-full md:w-3xl mx-auto p-6">
    <div class="my-4">
 
-
-		{{-- Admin quick options --}}
+		@organizer
 		<section class="mb-6 text-center text-sm">
 			<p class="text-gray-400">Admin opties:</p>
 			<div class="inline-block">
@@ -42,6 +41,7 @@ new class extends Component
 				</div>
 			</div>
 		</section>
+		@endorganizer
 
 		<section class="flex flex-col">
 
@@ -58,11 +58,21 @@ new class extends Component
 
 				<!-- Events: Collection -->
 				@foreach($this->events as $event)
+
+				<!-- Temp Policy Test -->
+				@can('delete', $event)
+					<!-- <div>Update test</div> -->
+				@endcan
+
 				<a href="{{ route('event.show', $event->id) }}" class="group" wire:key="event-{{ $event->id }}">
 					<div class="border rounded-lg cursor-pointer overflow-hidden transition delay-2s group-hover:bg-gray-800">
 						<div class="bg-gray-600 flex items-center justify-center aspect-3/2 w-full">
 							@if($event->hasMedia('banners'))
-							{{ $event->getFirstMedia('banners') }}
+							<img 
+                        src="{{ $event->getFirstMediaUrl('banners') }}" 
+                        class="aspect-3/2 object-cover" 
+                        alt="{{ $event->title }}"
+                     >
 							@else
 							<flux:icon.photo variant="solid" class="size-20 text-gray-400" />
 							@endif

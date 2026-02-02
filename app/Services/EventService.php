@@ -19,6 +19,7 @@ class EventService
       // Create the record in the database and ensure the correct types
       return Event::create([
         'title'       => $data['title'],
+        'user_id'     => auth()->user()->id,
         'category_id' => (int) $data['category_id'],
         'start_time'  => Carbon::parse($data['start_time']),
         'end_time'    => ($data['end_time']) ? Carbon::parse($data['end_time']) : null,
@@ -32,11 +33,16 @@ class EventService
     */
    public function updateEvent(Event $event, array $data): Event
    {
-      // 1. Ensure the date is a Carbon instance 
-      $data['start_time'] = Carbon::parse($data['start_time']);
 
-      // 2. Update the record in the database [note: tap() to ensure a model return]
-      return tap($event)->update($data);
+      // Update the record in the database [note: tap() to ensure a model return]
+      return tap($event)->update([
+         'title'       => $data['title'],
+         'category_id' => (int) $data['category_id'],
+         'start_time'  => Carbon::parse($data['start_time']),
+         'end_time'    => ($data['end_time']) ? Carbon::parse($data['end_time']) : null,
+         'content'     => $data['content'],
+         'status'      => (bool) ($data['status'] ?? false),
+      ]);
    }
 
    /**

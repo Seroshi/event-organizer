@@ -102,6 +102,9 @@ ui-label{
 a{
     cursor: pointer;
 }
+.show-content a{
+    color: #5baaff;
+}
 
 .trix-button-group{
     background-color: #d2d2d2;
@@ -123,12 +126,16 @@ a{
     gap: 10px;
 }
 trix-editor{
+    font-weight: 100;
     color: #dfdfdf;
     background-color: #323232;
     height: 400px !important;
     overflow-y: auto;
 }
-trix-editor h1{
+trix-editor a{
+    color: #5baaff;
+}
+trix-editor strong, h1{
     color: #dfdfdf;
 }
 trix-editor ol{

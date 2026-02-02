@@ -96,7 +96,7 @@ new class extends Component
 
     #[Computed]
     public function title(){ 
-        return $this->event ? 'Bewerk deze Evenement' : 'Evenement aanmaken'; 
+        return $this->event ? 'Bewerk deze evenement' : 'Evenement aanmaken'; 
     }
 
     #[Computed]
@@ -151,10 +151,10 @@ new class extends Component
             <div class="mb-6">
                 <div class="flex flex-col sm:flex-row gap-x-2 gap-y-3">
                     <span class="flex-1">
-                        <flux:input type="datetime-local" wire:model="start_time" label="Begintijd" />
+                        <flux:input type="datetime-local" wire:model.live="start_time" label="Begintijd" />
                     </span>
                     <span class="flex-1">
-                        <flux:input type="datetime-local" wire:model="end_time" label="Eindtijd" />
+                        <flux:input type="datetime-local" min="{{ $this->start_time }}" wire:model="end_time" label="Eindtijd" />
                     </span>
                 </div>
             </div>

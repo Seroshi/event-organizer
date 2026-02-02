@@ -5,8 +5,10 @@ namespace App\Providers;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
+use App\Enums\UserRole;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,6 +26,28 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureDefaults();
+
+        
+
+        Blade::if('master', function(){
+            $role = auth()->user()?->role;
+            return $role === UserRole::Master;
+        });
+
+        Blade::if('admin', function(){
+            $role = auth()->user()?->role;
+            return in_array($role, [UserRole::Master, UserRole::Admin]);
+        });
+
+        Blade::if('organizer', function(){
+            $role = auth()->user()?->role;
+            return in_array($role, [UserRole::Master, UserRole::Admin, UserRole::Organizer]);
+        });
+
+        Blade::if('user', function(){
+            $role = auth()->user()?->role;
+            return in_array($role, [UserRole::Master, UserRole::Admin, UserRole::Organizer, UserRole::User]);
+        });
         
         // Change names to Dutch
         \Carbon\Carbon::setLocale('nl');

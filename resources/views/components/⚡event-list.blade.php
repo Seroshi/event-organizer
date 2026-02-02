@@ -71,7 +71,7 @@ new class extends Component
       <section class="text-sm text-gray-400 flex gap-1 items-center mb-2">
          <a href="{{ route('event.index') }}" class="hover:text-gray-200">Evenementen</a>
          <flux:icon.chevron-right variant="solid" class="size-4" />
-         <a href="{{ route('event.list') }}" class="hover:text-gray-200">Alle evenementen</a>
+         <a href="{{ route('event.list') }}" class="{{ ($this->page == 'trash') ? 'hover:text-gray-200' : 'text-gray-200' }}">Alle evenementen</a>
          @if($this->page == 'trash')
          <flux:icon.chevron-right variant="solid" class="size-4" />
          <span class="text-gray-200">Evenementen prullenbak</span>
