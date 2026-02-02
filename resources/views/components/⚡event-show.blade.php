@@ -23,7 +23,7 @@ new class extends Component
 <div class="w-full md:w-2xl mx-auto p-6">
    <div class="my-8">
 
-      @organizer
+      @can('update', $this->event)
       <section class="mb-6 text-sm">
 			<p class="text-gray-400">Admin opties:</p>
 			<div class="inline-block">
@@ -43,7 +43,7 @@ new class extends Component
 				</div>
 			</div>
 		</section>
-      @endorganizer
+      @endcan
 
       <!-- Breadcrumbs -->
       <section class="text-sm text-gray-400 flex gap-1 items-center mb-10">

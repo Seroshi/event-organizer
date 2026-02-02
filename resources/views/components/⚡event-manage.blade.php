@@ -33,6 +33,7 @@ new class extends Component
             $this->content = $event->content;
             $this->status = (bool) $event->status;
         }
+
     }
 
     // Process the form data upon button click

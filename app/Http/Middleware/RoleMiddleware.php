@@ -14,22 +14,20 @@ class RoleMiddleware
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next, string $roleName): Response
+    public function handle(Request $request, Closure $next, string ...$roles): Response
     {
         $user = $request->user();
 
-        // tryFrom returns null if the role name (like an error) isn't found
-        $requiredRole = UserRole::tryFrom($roleName);
-
         // Make master an exception to the middleware
-        if ($user->role === UserRole::Master) {
+        if ($user?->role === UserRole::Master) {
             return $next($request);
         }
 
-        // Abort if defined user role doesn't exist
-        if (!$user || $user->role !== $requiredRole) {
-            abort(403, 'U heeft geen toegang tot deze pagina.');
+        if ($user && in_array($user->role->value, $roles)) {
+            return $next($request);
         }
+
+        abort(403, 'U heeft geen toegang tot deze pagina.');
 
         return $next($request);
     }

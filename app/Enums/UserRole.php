@@ -15,7 +15,7 @@ enum UserRole: string
       return match($this) {
          self::Master,     => 'full-access',
          self::Admin       => 'admin-access',
-         self::Organizer   => 'creater-access',
+         self::Organizer   => 'creator-access',
          default           => 'read-only',
       };
    }

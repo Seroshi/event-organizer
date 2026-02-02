@@ -27,8 +27,6 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->configureDefaults();
 
-        
-
         Blade::if('master', function(){
             $role = auth()->user()?->role;
             return $role === UserRole::Master;

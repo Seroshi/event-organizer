@@ -49,10 +49,27 @@ new class extends Component
 
    #[Computed]
    public function events(){
+      $userId = auth()->user()?->id;
       if($this->page == 'trash'){
-         return Event::with('media')->onlyTrashed()->get()->sortByDesc('updated_at');
+         try{
+            return Event::where('user_id', $userId)
+               ->with('media')->onlyTrashed()
+               ->get()
+               ->sortByDesc('updated_at');
+         } catch (\Exception $e){
+            Log::error('Failed to grab event trash list data: ' . $e.getMessage());
+            return false;
+         }
       }else{
-         return Event::with('media')->get()->sortByDesc('updated_at');
+         try{
+            return Event::where('user_id', $userId)
+               ->with('media')
+               ->get()
+               ->sortByDesc('updated_at');
+         } catch (\Exception $e){
+            Log::error('Failed to grab event list data: ' . $e.getMessage());
+            return false;
+         }
       }
    }
 
