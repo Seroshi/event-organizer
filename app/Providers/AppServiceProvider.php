@@ -27,24 +27,19 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->configureDefaults();
 
-        Blade::if('master', function(){
-            $role = auth()->user()?->role;
-            return $role === UserRole::Master;
-        });
-
         Blade::if('admin', function(){
             $role = auth()->user()?->role;
-            return in_array($role, [UserRole::Master, UserRole::Admin]);
+            return in_array($role, [UserRole::Admin]);
         });
 
         Blade::if('organizer', function(){
             $role = auth()->user()?->role;
-            return in_array($role, [UserRole::Master, UserRole::Admin, UserRole::Organizer]);
+            return in_array($role, [UserRole::Admin, UserRole::Organizer]);
         });
 
         Blade::if('user', function(){
             $role = auth()->user()?->role;
-            return in_array($role, [UserRole::Master, UserRole::Admin, UserRole::Organizer, UserRole::User]);
+            return in_array($role, [UserRole::Admin, UserRole::Organizer, UserRole::User]);
         });
         
         // Change names to Dutch

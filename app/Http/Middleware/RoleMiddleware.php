@@ -18,11 +18,6 @@ class RoleMiddleware
     {
         $user = $request->user();
 
-        // Make master an exception to the middleware
-        if ($user?->role === UserRole::Master) {
-            return $next($request);
-        }
-
         if ($user && in_array($user->role->value, $roles)) {
             return $next($request);
         }

@@ -5,40 +5,37 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Services\EventService;
 
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class Event extends Model implements HasMedia
+class Profile extends Model implements HasMedia
 {
-    use SoftDeletes, InteractsWithMedia;
+    use InteractsWithMedia;
 
     protected $guarded = [];  
-
-    protected $casts = [
-        'category_id' => 'integer',
-        'start_time' => 'datetime:H:i', // option: datetime:H:i
-        'end_time' => 'datetime:H:i',
-        'status'     => 'boolean',
-    ];
 
     public function user(): BelongsTo
     {
         return $this->BelongsTo(User::class, 'user_id');
     }
 
-    public function category(): BelongsTo
+    public function getNameAttribute(): string
     {
-        return $this->BelongsTo(Category::class, 'category_id');
+        return $this->user->name;
+    }
+
+    public function getEmailAttribute(): string
+    {
+        return $this->user->email;
     }
 
     // Spatie Image: the BUCKET rules here
     public function registerMediaCollections(): void
     {
-        $this->addMediaCollection('banners')
+        $this->addMediaCollection('profiles')
             ->singleFile() 
             ->withResponsiveImages();
     }

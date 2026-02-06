@@ -1,5 +1,8 @@
 <?php
 
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Database\Eloquent\Collection;
+
 use Illuminate\Http\Request;
 use Livewire\Component;
 use Livewire\Attributes\Computed;
@@ -10,13 +13,13 @@ new class extends Component
 {
    public $page = '';
 
-   public function mount(Request $request){
+   public function mount(Request $request)
+   {
       // Get page parameter from request
       $this->page = $request->page;
-      
    }
 
-   public function delete(Event $event, EventService $service)
+   public function delete(Event $event, EventService $service): RedirectResponse
    {
       $force = false;
 
@@ -32,7 +35,7 @@ new class extends Component
       // return redirect()->route('event.list');
    }
 
-   public function restore($id, EventService $service)
+   public function restore($id, EventService $service): RedirectResponse
    {
       $event = Event::withTrashed()->findOrFail($id);
 
@@ -48,33 +51,38 @@ new class extends Component
    }
 
    #[Computed]
-   public function events(){
+   public function events(): Collection
+   {
       $userId = auth()->user()?->id;
+
       if($this->page == 'trash'){
          try{
             return Event::where('user_id', $userId)
                ->with('media')->onlyTrashed()
-               ->get()
-               ->sortByDesc('updated_at');
+               ->orderBy('updated_at', 'asc')
+               ->get();
          } catch (\Exception $e){
-            Log::error('Failed to grab event trash list data: ' . $e.getMessage());
-            return false;
+            report($e);
+            session()->flash('error', 'De prullenbak events kon niet worden geladen.');
+            return collect();
          }
       }else{
          try{
             return Event::where('user_id', $userId)
                ->with('media')
-               ->get()
-               ->sortByDesc('updated_at');
+               ->orderBy('updated_at', 'asc')
+               ->get();
          } catch (\Exception $e){
-            Log::error('Failed to grab event list data: ' . $e.getMessage());
-            return false;
+            report($e);
+            session()->flash('error', 'De events kon niet worden geladen.');
+            return collect();
          }
       }
    }
 
    #[Computed]
-   public function emptyText(){
+   public function emptyText(): String
+   {
       return ($this->page == 'trash') ? 'De prullenbak is leeg, mooi dat je het schoon houdt.' : 'Geen evenementen gevonden.';
    }
 
@@ -88,7 +96,7 @@ new class extends Component
       <section class="text-sm text-gray-400 flex gap-1 items-center mb-2">
          <a href="{{ route('event.index') }}" class="hover:text-gray-200">Evenementen</a>
          <flux:icon.chevron-right variant="solid" class="size-4" />
-         <a href="{{ route('event.list') }}" class="{{ ($this->page == 'trash') ? 'hover:text-gray-200' : 'text-gray-200' }}">Alle evenementen</a>
+         <a href="{{ route('event.list') }}" class="{{ ($this->page == 'trash') ? 'hover:text-gray-200' : 'text-gray-200' }}">Mijn evenementen</a>
          @if($this->page == 'trash')
          <flux:icon.chevron-right variant="solid" class="size-4" />
          <span class="text-gray-200">Evenementen prullenbak</span>
@@ -107,7 +115,7 @@ new class extends Component
       <section class="w-full overflow-x-auto hide-scrollbar-until-hover">
          <div class="min-w-3xl">
             <!-- Header -->
-            <div class="flex gap-1 w-full font-bold bg-gray-600 px-2 py-1 mb-1">
+            <div class="flex gap-1 w-full font-bold rounded-md bg-gray-500 px-2 py-1 mb-1">
                <p class="w-7">ID</p>
                <p class="w-40 md:w-30 mr-2 text-center">Afbeelding</p>
                <p class="w-80">Titel</p>

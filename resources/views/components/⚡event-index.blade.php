@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Database\Eloquent\Collection;
+
 use Livewire\Component;
 use Livewire\Attributes\Computed;
 use App\Services\EventService;
@@ -8,21 +10,23 @@ use App\Models\Event;
 new class extends Component
 {
 	#[Computed]
-	public function events(){
+	public function events(): Collection
+	{
 		return Event::with('media')
 			->where('status', true)
 			->get()
 			->sortBy('start_time');
 	}
 
-	public function countdown($event){
+	public function countdown($event): String
+	{
 		return app(EventService::class)->getSmartCountdown($event);
 	}
 };
 ?>
 
 
-<div class="w-full md:w-3xl mx-auto p-6">
+<div class="w-full sm:w-xl md:w-3xl lg:w-4xl  mx-auto p-6">
    <div class="my-4">
 
 		@organizer
@@ -54,7 +58,7 @@ new class extends Component
 			</h2>
 
 			<!-- Events: All -->
-			<div class="grid grid-cols-2 md:grid-cols-3 gap-4 mt-2">
+			<div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-2">
 
 				<!-- Events: Collection -->
 				@foreach($this->events as $event)
@@ -66,22 +70,22 @@ new class extends Component
 
 				<a href="{{ route('event.show', $event->id) }}" class="group" wire:key="event-{{ $event->id }}">
 					<div class="border rounded-lg cursor-pointer overflow-hidden transition delay-2s group-hover:bg-gray-800">
-						<div class="bg-gray-600 flex items-center justify-center aspect-3/2 w-full">
+						<div class="bg-gray-600 relative justify-center aspect-3/2 w-full">
 							@if($event->hasMedia('banners'))
 							<img 
-                        src="{{ $event->getFirstMediaUrl('banners') }}" 
-                        class="aspect-3/2 object-cover" 
+                        src="{{ $event->getFirstMediaUrl('banners', 'thumb') }}" 
+                        class="absolute inset-0 object-cover w-full h-full" 
                         alt="{{ $event->title }}"
                      >
 							@else
 							<flux:icon.photo variant="solid" class="size-20 text-gray-400" />
 							@endif
 						</div>
-						<div class="p-4 text-center">
+						<div class="p-2 text-center">
 							<p class="text-xs text-gray-400">#{{ $event->category->name }}</p>
 							<h2 class="text-md font-semibold line-clamp-1 mb-1">{{ $event->title }}</h2>
 							<div class="line-clamp-1">
-								<span class="text-sm color-main rounded-md px-2 py-0.5 mr-2">{{ $event->start_time->format('d M') }}</span>
+								<span class="text-sm sm:text-xs color-main rounded-md px-2 py-0.5 mr-2">{{ $event->start_time->format('d M') }}</span>
 								<span wire:poll.60s class="text-sm">{{ $this->countdown($event) }}</span>
 							</div>
 						</div>

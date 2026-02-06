@@ -4,18 +4,35 @@ use Livewire\Component;
 use Livewire\Attributes\Computed;
 use App\Services\EventService;
 use App\Models\Event;
+use App\Models\Profile;
 
 new class extends Component
 {
-    public $event = null;
+   public $event = null;
+   public $profile = null;
 
-    public function mount(Event $event){
-        $this->event = $event;
-    }
+   public function mount(Event $event): void
+   {
+      $this->event = $event;
 
-    #[Computed]
-    public function countdown(){
-		return app(EventService::class)->getSmartCountdown($this->event);;
+      $userId = $event->user_id;
+      $user = Profile::where('user_id', $userId)->first();
+      ($user) ? $this->profile = $user : null;
+   }
+
+   // Display the event countdown text
+   #[Computed]
+   public function countdown(): string
+   {
+      return app(EventService::class)->getSmartCountdown($this->event);;
+	}
+
+   // Display the organizer or company name
+   #[Computed]
+   public function organizerName(): string
+   {
+      $company = $this->profile->company;
+      return ($company) ? $company : $this->profile->name;
 	}
 };
 ?>
@@ -34,7 +51,7 @@ new class extends Component
 					</a>
                <a href="{{ route('event.list') }}" class="flex gap-1 items-center bg-zinc-800 hover:bg-gray-500 transition delay-2s px-2 py-1 rounded-md">
 						<flux:icon.list-bullet variant="solid" class="size-5" />
-						<p>Zie alle evenementen</p>
+						<p>Mijn evenementen</p>
 					</a>
 					<a href="{{ route('event.create') }}" class="flex gap-1 items-center bg-zinc-800 hover:bg-gray-500 transition delay-2s px-2 py-1 rounded-md">
 						<flux:icon.plus variant="solid" class="size-4" />
@@ -78,6 +95,27 @@ new class extends Component
             {!! $this->event->content !!}
          </div>
 
+      </section>
+
+      <section class="border-t border-gray-400 mt-10">
+         <div class="flex items-center gap-4 mt-4">
+            <div class="w-35 sm:w-25 aspect-square rounded-full flex items-center overflow-hidden justify-center bg-zinc-500 border-3 border-gray-300 inset-shadow-zinc-300">
+               @if($this->profile?->hasMedia('profiles'))
+               <img src="{{ $this->profile->getFirstMediaUrl('profiles', 'thumb') }}" 
+                  class="aspect-square object-cover" 
+                  alt="profile-image"
+               >
+               @else
+               <flux:icon.user-circle variant="solid" class="size-26 text-gray-400" />
+               @endif
+            </div>
+            <div>
+               <p>Georganiseerd door</p>
+               <p class="text-lg w-fit flex color-sub rounded-md px-4 py-0.5 mt-1">
+                  {{ $this->organizerName }}
+               </p>
+            </div>
+         </div>
       </section>
 
    </div>

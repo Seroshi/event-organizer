@@ -66,6 +66,7 @@
 
     .hide-scrollbar-until-hover:hover::-webkit-scrollbar-track{
         background-color: #303030;
+        border-radius: 6px;
     }
     /* Hide by making it transparent */
     .hide-scrollbar-until-hover::-webkit-scrollbar-thumb {
@@ -75,7 +76,7 @@
 
     /* Show by making it solid on hover */
     .hide-scrollbar-until-hover:hover::-webkit-scrollbar-thumb {
-        background-color: rgba(78, 81, 84, 0.952);
+        background-color: rgba(103, 106, 110, 0.952);
         cursor: pointer;
     }
 
@@ -160,7 +161,7 @@ trix-editor blockquote{
     background-color: #2a7fda;
     filter: brightness(1);
 }
-.color-sub:hover{
+.hover-color-sub:hover{
     background-color: #57a8fd;
 }
 

@@ -9,6 +9,10 @@ Route::middleware(['role:admin,organizer'])->group(function () {
     Volt::route('/events/{event}/edit', 'event-manage')->name('event.edit');
 });
 
+Volt::route('/dashboard', 'dashboard')
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
+
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
@@ -16,8 +20,8 @@ Route::get('/', function () {
 Volt::route('/events', 'event-index')->name('event.index');
 Volt::route('/events/{event}', 'event-show')->name('event.show');
 
-Route::view('dashboard', 'dashboard')
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+// Route::view('dashboard', 'dashboard')
+//     ->middleware(['auth', 'verified'])
+//     ->name('dashboard');
 
 require __DIR__.'/settings.php';
