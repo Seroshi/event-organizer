@@ -1,4 +1,4 @@
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 800 240" xml:space="preserve">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 240" xml:space="preserve">
     
     <polygon fill="#57A8FD" points="146.944,67.815 146.944,37.142 33.928,37.142 33.928,202.857 146.944,202.857 146.944,172.185 
         66.577,172.185 66.577,135.227 66.577,104.554 66.577,67.815 	"/>

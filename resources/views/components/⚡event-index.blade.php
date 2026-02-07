@@ -36,7 +36,7 @@ new class extends Component
 				<div class="flex justify-center rounded-md gap-1 p-1 bg-gray-700">
 					<a href="{{ route('event.list') }}" class="flex gap-1 items-center bg-zinc-800 hover:bg-gray-500 transition delay-2s px-2 py-1 rounded-md">
 						<flux:icon.list-bullet variant="solid" class="size-5" />
-						<p>Zie mijn evenementen</p>
+						<p>Mijn evenementen</p>
 					</a>
 					<a href="{{ route('event.create') }}" class="flex gap-1 items-center bg-zinc-800 hover:bg-gray-500 transition delay-2s px-2 py-1 rounded-md">
 						<flux:icon.plus variant="solid" class="size-4" />

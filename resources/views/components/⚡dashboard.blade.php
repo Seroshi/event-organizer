@@ -22,14 +22,6 @@ new class extends Component
       $this->roleOptions = UserRole::options();
    }
 
-   // Logout through a livewire action that triggers __invoke 
-   public function logout(Logout $logout): void
-   {
-      $logout(); 
-
-      $this->redirect('/', navigate: true);
-   }
-
    // For displaying the event counter text
    #[Computed] 
    public function eventCount(): array
@@ -45,12 +37,6 @@ new class extends Component
 ?>
 
 <div class="w-full sm:w-2xl md:w-3xl lg:w-4xl mx-auto px-12 py-6">
-
-   <section>
-      <a wire:click="logout" href="#" class="text-sm bg-gray-500 hover:bg-gray-700 rounded-md px-2 py-1">
-         Afmelden
-      </a>
-   </section>
 
    <div class="flex gap-5 items-center flex-col sm:flex-row">
 

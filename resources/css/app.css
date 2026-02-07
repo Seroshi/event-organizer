@@ -14,7 +14,7 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 
     --color-main: #642066;
-    --color-sub: #B0D0FF;
+    --color-sub: #57a8fd;
 
     --color-zinc-50: #fafafa;
     --color-zinc-100: #f5f5f5;
@@ -166,7 +166,7 @@ trix-editor blockquote{
 }
 
 .styling-h{
-    border-color: #57a8fd;
+    border-color: var(--color-sub);
     border-width: 2px 0;
     display: inline-block;
     padding: 6px 20px;

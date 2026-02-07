@@ -44,7 +44,7 @@ class AppServiceProvider extends ServiceProvider
 
         Blade::if('user', function(){
             $role = auth()->user()?->role;
-            return in_array($role, [UserRole::Admin, UserRole::Organizer, UserRole::User]);
+            return in_array($role, [UserRole::User]);
         });
         
         // Change names to Dutch

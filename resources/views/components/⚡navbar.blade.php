@@ -1,0 +1,70 @@
+<?php
+
+use Livewire\Component;
+use Livewire\Attributes\Computed;
+
+use App\Livewire\Actions\Logout;
+
+new class extends Component
+{
+    public function logout(Logout $logout): void
+    {
+        // Logout through a livewire action that triggers __invoke 
+        $logout();
+        
+        $this->redirect('/', navigate: true);
+    }
+};
+?>
+
+<nav x-data="{ mobile: false }" class="">
+    <div class="color-main relative max-w-7xl border-b border-gray-100 h-16.5 z-50">
+        <div class="text-xl sm:text-sm flex justify-between h-16">
+            <div class="flex">
+                <div class="flex items-center sm:hidden ml-3">
+                    <button @click="mobile =! mobile" class="inline-flex items-center justify-center p-1 rounded-md text-gray-100 hover:text-gray-500 hover:bg-gray-100 focus:outline-none transition">
+                        {{-- Switch icons based on "mobile" state --}}
+                        <svg class="size-8" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                            <path :class="{'hidden': mobile, 'inline-flex': ! mobile }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                            <path :class="{'hidden': ! mobile, 'inline-flex': mobile }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <a href="{{ route('event.index') }}" class="relative left-2 sm:left-5 flex items-center font-bold aspect-3/2 mr-3 z-60">
+                    <x-app-logo-icon />
+                </a>
+                <div class="left-0 pl-0.5 sm:pl-5 absolute sm:relative translate-y-16.5 -translate-x-full sm:translate-y-0 transition-all duration-300 color-main w-sm flex flex-wrap sm:flex-nowrap items-center"
+                    :class="mobile ? 'translate-x-0' : '-translate-x-full sm:translate-x-0'"
+                >
+                    <a href="{{ route('event.index') }}" class="color-main hover-color-main px-4 py-2 rounded-md w-full flex items-center gap-4 sm:gap-1 sm:w-auto">
+                        <flux:icon.home variant="outline" class="size-7 sm:size-5" />
+                        <span>Home</span>
+                    </a>
+                    @auth
+                    <a href="{{ route('dashboard') }}" class="color-main hover-color-main px-4 py-2 rounded-md w-full flex items-center gap-4 sm:gap-1  sm:w-auto">
+                        <flux:icon.squares-2x2 variant="outline" class="size-7 sm:size-5" />
+                        <span>Dashboard</span>
+                    </a>
+                    @endauth
+                </div>
+            </div>
+
+            <div class="flex items-center pr-3">
+                @if(Auth::guest())
+                <a href="{{ route('login') }}" class="hover:bg-gray-100 hover:text-gray-500 p-1 rounded-md w-full flex items-center gap-3 sm:gap-1  sm:w-auto">
+                    <flux:icon.user-circle variant="outline" class="size-9 sm:size-7" />
+                    <span class="hidden sm:block sm:pr-1">Log in</span>
+                </a>
+                @else
+                <a wire:click="logout" class="hover:bg-gray-100 hover:text-gray-500 p-1 rounded-md w-full flex items-center gap-3 sm:gap-1  sm:w-auto">
+                    <flux:icon.arrow-right-end-on-rectangle variant="outline" class="size-9 sm:size-7" />
+                    <span class="hidden sm:block sm:pr-1">Log uit</span>
+                </a>
+                @endif
+            </div>
+
+        </div>
+
+    </div>
+
+</nav>
