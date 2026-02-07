@@ -27,6 +27,11 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->configureDefaults();
 
+        Blade::if('auth', function(){
+            $role = auth()->user()?->role;
+            return in_array($role, [UserRole::Admin, UserRole::Organizer]);
+        });
+
         Blade::if('admin', function(){
             $role = auth()->user()?->role;
             return in_array($role, [UserRole::Admin]);
@@ -34,7 +39,7 @@ class AppServiceProvider extends ServiceProvider
 
         Blade::if('organizer', function(){
             $role = auth()->user()?->role;
-            return in_array($role, [UserRole::Admin, UserRole::Organizer]);
+            return in_array($role, [UserRole::Organizer]);
         });
 
         Blade::if('user', function(){

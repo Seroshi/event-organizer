@@ -29,7 +29,7 @@ new class extends Component
 <div class="w-full sm:w-xl md:w-3xl lg:w-4xl  mx-auto p-6">
    <div class="my-4">
 
-		@organizer
+		@auth
 		<section class="mb-6 text-center text-sm">
 			<p class="text-gray-400">Admin opties:</p>
 			<div class="inline-block">
@@ -45,7 +45,7 @@ new class extends Component
 				</div>
 			</div>
 		</section>
-		@endorganizer
+		@endauth
 
 		<section class="flex flex-col">
 
