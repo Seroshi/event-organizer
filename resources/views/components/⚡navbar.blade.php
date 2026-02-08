@@ -17,7 +17,7 @@ new class extends Component
 };
 ?>
 
-<nav x-data="{ mobile: false }" class="">
+<nav x-data="{ mobile: false }" @click.outside="if(mobile) mobile = false">
     <div class="color-main relative max-w-7xl border-b border-gray-100 h-16.5 z-50">
         <div class="text-xl sm:text-sm flex justify-between h-16">
             <div class="flex">
@@ -33,8 +33,8 @@ new class extends Component
                 <a href="{{ route('event.index') }}" class="relative left-2 sm:left-5 flex items-center font-bold aspect-3/2 mr-3 z-60">
                     <x-app-logo-icon />
                 </a>
-                <div class="left-0 pl-0.5 sm:pl-5 absolute sm:relative translate-y-16.5 -translate-x-full sm:translate-y-0 transition-all duration-300 color-main w-sm flex flex-wrap sm:flex-nowrap items-center"
-                    :class="mobile ? 'translate-x-0' : '-translate-x-full sm:translate-x-0'"
+                <div class="left-0 pl-0.5 sm:pl-5 absolute sm:relative -translate-x-full sm:translate-x-0 sm:translate-y-0 transition-all duration-300 color-main w-sm flex items-center"
+                    :class="mobile ? 'translate-x-0 flex-wrap translate-y-16.5' : '-translate-x-full flex-wrap sm:translate-x-0 translate-y-16.5'"
                 >
                     <a href="{{ route('event.index') }}" class="color-main hover-color-main px-4 py-2 rounded-md w-full flex items-center gap-4 sm:gap-1 sm:w-auto">
                         <flux:icon.home variant="outline" class="size-7 sm:size-5" />
@@ -57,7 +57,7 @@ new class extends Component
                 </a>
                 @else
                 <a wire:click="logout" class="hover:bg-gray-100 hover:text-gray-500 p-1 rounded-md w-full flex items-center gap-3 sm:gap-1  sm:w-auto">
-                    <flux:icon.arrow-right-end-on-rectangle variant="outline" class="size-9 sm:size-7" />
+                    <flux:icon.arrow-right-end-on-rectangle variant="outline" class="size-9 sm:size-6" />
                     <span class="hidden sm:block sm:pr-1">Log uit</span>
                 </a>
                 @endif
