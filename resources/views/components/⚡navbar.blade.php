@@ -18,7 +18,7 @@ new class extends Component
 ?>
 
 <nav x-data="{ mobile: false }" @click.outside="if(mobile) mobile = false">
-    <div class="color-main relative max-w-7xl border-b border-gray-100 h-16.5 z-50">
+    <div class="color-main relative w-full border-b border-gray-100 h-16.5 z-50">
         <div class="text-xl sm:text-sm flex justify-between h-16">
             <div class="flex">
                 <div class="flex items-center sm:hidden ml-3">

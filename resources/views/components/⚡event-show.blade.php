@@ -70,9 +70,8 @@ new class extends Component
       </section>
 
       <section>
-
          <!-- Banner image -->
-         <div class="mb-6">
+         <div class="mb-4 overflow-hidden rounded-md">
             @if($this->event->hasMedia('banners'))
             {{ $this->event->getFirstMedia('banners') }}
             @else
@@ -82,19 +81,25 @@ new class extends Component
             @endif
          </div>
 
+         <!-- Event statistics -->
+         <div class="mb-6">
+            <livewire:statistic :eventId="$this->event->id"/>
+         </div>
+
          <!-- Event title -->
          <p class="text-gray-400 font-light">#{{ $this->event->category?->name }}</p>
          <h2 class="text-2xl mb-6">{{ $this->event->title }}</h2>
 
+         <!-- Event data & countdown -->
          <div class="mb-6">
             <p class="color-main inline-block rounded-sm px-2 py-0.5">{{ $this->event->start_time->format('D d M Y') }}</p>
             <span wire:poll.60s class="text-gray-400 ml-2">{{ $this->countdown }}</span>
          </div>
 
+         <!-- Event content -->
          <div class="show-content">
             {!! $this->event->content !!}
          </div>
-
       </section>
 
       <section class="border-t border-gray-400 mt-10">

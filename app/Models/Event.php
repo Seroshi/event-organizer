@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Services\EventService;
 
@@ -33,6 +35,11 @@ class Event extends Model implements HasMedia
     public function category(): BelongsTo
     {
         return $this->BelongsTo(Category::class, 'category_id');
+    }
+
+    public function statistic(): HasOne
+    {
+        return $this->HasOne(Statistic::class);
     }
 
     // Spatie Image: the BUCKET rules here

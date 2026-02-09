@@ -121,6 +121,7 @@ new class extends Component
                <p class="w-80">Titel</p>
                <p class="w-30">Bewerkt</p>
                <p class="w-30">Gemaakt</p>
+               <p class="w-15 text-end pr-1">Details</p>
                <p class="w-20 text-center">Status</p>
                <p class="w-70 md:w-50 text-center">Opties</p>
             </div>
@@ -135,7 +136,7 @@ new class extends Component
                   <div class="bg-gray-600 flex items-center justify-center aspect-square rounded-md overflow-hidden w-full">
                      @if($event->getFirstMediaUrl('banners'))
                      <img 
-                        src="{{ $event->getFirstMediaUrl('banners') }}" 
+                        src="{{ $event->getFirstMediaUrl('banners', 'thumb') }}" 
                         class="aspect-square object-cover" 
                         alt="{{ $event->title }}"
                      >
@@ -165,6 +166,17 @@ new class extends Component
                         <flux:icon.clock variant="solid" class="size-4 text-gray-400" />
                         <span>{{ $event->created_at->format('H:i') }}</span>
                      </div>
+                  </div>
+               </div>
+
+               <div class="w-15 content-center text-end pr-2">
+                  <div class="flex gap-1 items-center justify-end">
+                     <flux:icon.eye variant="outline" class="size-4 text-gray-400" />
+                     <span>{{ $event->statistic->views }}</span>
+                  </div>
+                  <div class="flex gap-1 items-center justify-end">
+                     <flux:icon.heart variant="outline" class="size-4 text-gray-400" />
+                     <span>{{ $event->statistic->likes }}</span>
                   </div>
                </div>
 
