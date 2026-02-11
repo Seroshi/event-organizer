@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Pagination\Paginator;
 use App\Enums\UserRole;
 
 class AppServiceProvider extends ServiceProvider
@@ -50,6 +51,8 @@ class AppServiceProvider extends ServiceProvider
         // Change names to Dutch
         \Carbon\Carbon::setLocale('nl');
         setlocale(LC_TIME, 'nl_NL');
+
+        Paginator::defaultView('tailwind');
     }
 
     protected function configureDefaults(): void

@@ -38,7 +38,7 @@ new class extends Component
 
 <div class="w-full sm:w-2xl md:w-3xl lg:w-4xl mx-auto px-12 py-6">
 
-   <div class="flex gap-5 items-center flex-col sm:flex-row">
+   <div class="flex gap-5 items-center flex-wrap">
 
       <livewire:dashboard-profile />
 
@@ -74,6 +74,8 @@ new class extends Component
          </div>
       </section>
       @endorganizer
+
+      <livewire:dashboard-stats />
 
    </div>
 

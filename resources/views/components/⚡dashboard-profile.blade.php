@@ -73,10 +73,10 @@ new class extends Component
 ?>
 
 
-<div class="w-full flex flex-col">
+<div class="w-full sm:w-[48.2%]">
 
    <!-- Profile: Show User Info -->
-   <section>
+   <section class="h-auto sm:h-80">
 
       <h2 class="font-bold text-md text-gray-300 flex items-center justify-center gap-1 mb-1">
          <span>

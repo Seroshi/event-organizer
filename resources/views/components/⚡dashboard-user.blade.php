@@ -2,9 +2,11 @@
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 use Livewire\Component;
 use Livewire\Attributes\Computed;
+use Livewire\WithPagination;
 
 use App\Enums\UserRole;
 use App\Models\User;
@@ -12,6 +14,8 @@ use App\Models\Event;
 
 new class extends Component
 {
+   use WithPagination;
+
    public $userId = null;
    public $userRole = 'user';
    public $userName = '';
@@ -64,16 +68,16 @@ new class extends Component
    }
 
    #[Computed]
-   public function getUserRoles(): Collection
+   public function getUserRoles(): ?LengthAwarePaginator
    {
       try{
          return User::where('id', '!=', auth()->id())
             ->orderByRaw("FIELD(role, 'master', 'admin', 'organizer', 'user')")
-            ->get();
+            ->paginate(33, pageName: 'users');
       } catch (\Exception $e){
          report($e);
          session()->flash('error', 'De gebruikerslijst kon niet worden geladen.');
-         return collect();
+         return new LengthAwarePaginator([], 0, 0);
       }
    }
 
@@ -95,28 +99,31 @@ new class extends Component
 };
 ?>
 
-<section class="w-full flex flex-col">
+<div class="w-full sm:w-[48.2%]">
 
-   <h2 class="font-bold text-md text-gray-300 flex items-center justify-center gap-1 mb-1">
-      <span>
-         <flux:icon.users variant="outline" class="size-5" />
-      </span>
-      <span>Alle gebruikers ({{ $this->userCount }})</span>
-   </h2>
-   <div class="text-lg sm:text-sm bg-zinc-700 rounded-lg py-2 pl-2 pr-1">
-      <div class="h-83 sm:h-59.5 overflow-y-auto hide-scrollbar-until-hover">
-         @foreach($this->getUserRoles as $user)
-         <a wire:click="getUserData({{ $user->id }})" href="#"
-            class="flex justify-between rounded-md hover:bg-gray-600 cursor-pointer px-2 py-1 "
-         >
-            <p>{{ $user->name }}</p>
-            <p class="{{ $user->role->labelColor() }} rounded-md px-2">
-               {{ strtolower($user->role->label()) }}
-            </p>
-         </a>
-         @endforeach
+   <section class="h-auto sm:h-80">
+      <h2 class="font-bold text-md text-gray-300 flex items-center justify-center gap-1 mb-1">
+         <span>
+            <flux:icon.users variant="outline" class="size-5" />
+         </span>
+         <span>Alle gebruikers ({{ $this->userCount }})</span>
+      </h2>
+      <div class="text-lg sm:text-sm bg-zinc-700 rounded-lg py-2 pl-2 pr-1">
+         <div class="h-83 sm:h-59.5 overflow-y-auto hide-scrollbar-until-hover">
+            @foreach($this->getUserRoles as $user)
+            <a wire:click="getUserData({{ $user->id }})" href="#"
+               class="flex justify-between rounded-md hover:bg-gray-600 cursor-pointer px-2 py-1 "
+            >
+               <p>{{ $user->name }}</p>
+               <p class="{{ $user->role->labelColor() }} rounded-md px-2">
+                  {{ strtolower($user->role->label()) }}
+               </p>
+            </a>
+            @endforeach
+         </div>
       </div>
-   </div>
+      <div class="mt-2">{{ $this->getUserRoles()->links() }}</div>
+   </section>
 
    <!-- Modal: Edit User Role -->
    <x-modal-layout name="edit-user-role">
@@ -159,4 +166,4 @@ new class extends Component
 
    </x-modal-layout>
 
-</section>
+</div>
