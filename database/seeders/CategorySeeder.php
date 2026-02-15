@@ -13,7 +13,7 @@ class CategorySeeder extends Seeder
      */
     public function run(): void
     {
-        $categories = ['Anime', 'Games', 'Music', 'Family', 'Social', 'Workshop'];
+        $categories = ['Actie', 'Anime', 'Cultuur', 'Eten', 'Educatie', 'Entertainment', 'Games', 'Geschiedenis', ' Musea', 'Music', 'Musical', 'Familie', 'Social', 'Sport', 'Workshop'];
 
         foreach ($categories as $name) {
             Category::create([

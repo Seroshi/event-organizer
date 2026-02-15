@@ -2,15 +2,20 @@
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Database\Eloquent\Collection;
-
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
+
 use Livewire\Component;
 use Livewire\Attributes\Computed;
+use Livewire\WithPagination;
+
 use App\Services\EventService;
 use App\Models\Event;
 
 new class extends Component
 {
+   use WithPagination;
+
    public $page = '';
 
    public function mount(Request $request)
@@ -19,7 +24,7 @@ new class extends Component
       $this->page = $request->page;
    }
 
-   public function delete(Event $event, EventService $service): RedirectResponse
+   public function delete(Event $event, EventService $service): void
    {
       $force = false;
 
@@ -31,11 +36,11 @@ new class extends Component
          session()->flash('error', 'Evenement kon niet verwijderd worden.');
       }
 
-      return $this->redirectRoute('event.list', navigate:true);
-      // return redirect()->route('event.list');
+      $this->redirectRoute('event.list', navigate:true);
+      return;
    }
 
-   public function restore($id, EventService $service): RedirectResponse
+   public function restore($id, EventService $service): void
    {
       $event = Event::withTrashed()->findOrFail($id);
 
@@ -47,36 +52,26 @@ new class extends Component
          session()->flash('error', 'Evenement kon niet hersteld worden.');
       }
 
-      return $this->redirectRoute('event.list', ['page' => 'trash'], navigate:true);
+      $this->redirectRoute('event.list', ['page' => 'trash'], navigate:true);
+      return;
    }
 
    #[Computed]
-   public function events(): Collection
+   public function events(): LengthAwarePaginator
    {
       $userId = auth()->user()?->id;
+      $paginateLimit = 15;
 
       if($this->page == 'trash'){
-         try{
-            return Event::where('user_id', $userId)
-               ->with('media')->onlyTrashed()
-               ->orderBy('updated_at', 'asc')
-               ->get();
-         } catch (\Exception $e){
-            report($e);
-            session()->flash('error', 'De prullenbak events kon niet worden geladen.');
-            return collect();
-         }
+         return Event::where('user_id', $userId)
+            ->with('media')->onlyTrashed()
+            ->orderBy('updated_at', 'desc')
+            ->paginate($paginateLimit);
       }else{
-         try{
-            return Event::where('user_id', $userId)
-               ->with('media')
-               ->orderBy('updated_at', 'asc')
-               ->get();
-         } catch (\Exception $e){
-            report($e);
-            session()->flash('error', 'De events kon niet worden geladen.');
-            return collect();
-         }
+         return Event::where('user_id', $userId)
+            ->with('media')
+            ->orderBy('updated_at', 'desc')
+            ->paginate($paginateLimit);
       }
    }
 
@@ -147,7 +142,9 @@ new class extends Component
                </div>
 
                <!-- Event updated -->
-               <div class="flex items-center w-80">{{ $event->title }}</div>
+               <div class="flex items-center w-80">
+                  <a href="{{ route('event.show', $event->id) }}">{{ $event->title }}</a>
+               </div>
                <div class="w-30 flex items-center">
                   <div>
                      <span>{{ $event->updated_at->format('d-m-y') }}</span>
@@ -172,11 +169,11 @@ new class extends Component
                <div class="w-15 content-center text-end pr-2">
                   <div class="flex gap-1 items-center justify-end">
                      <flux:icon.eye variant="outline" class="size-4 text-gray-400" />
-                     <span>{{ $event->statistic->views }}</span>
+                     <span>{{ $event->statistic?->views }}</span>
                   </div>
                   <div class="flex gap-1 items-center justify-end">
                      <flux:icon.heart variant="outline" class="size-4 text-gray-400" />
-                     <span>{{ $event->statistic->likes }}</span>
+                     <span>{{ $event->statistic?->likes }}</span>
                   </div>
                </div>
 

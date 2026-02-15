@@ -1,21 +1,35 @@
 <?php
 
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 use Livewire\Component;
 use Livewire\Attributes\Computed;
+use Livewire\WithPagination;
+
 use App\Services\EventService;
 use App\Models\Event;
 
 new class extends Component
 {
+	use WithPagination;
+
 	#[Computed]
-	public function events(): Collection
+	public function events(): LengthAwarePaginator
 	{
+		$paginateLimit = 6;
 		return Event::with('media')
-			->where('status', true)
-			->get()
-			->sortBy('start_time');
+			->isActive()
+			->orderBy('start_time','asc')
+			->paginate($paginateLimit);
+	}
+
+	#[Computed] 
+	public function passedEvents(): LengthAwarePaginator
+	{
+		return Event::isFinished()
+			->orderBy('end_time','desc')
+			->paginate(6);
 	}
 
 	public function countdown($event): String
@@ -62,12 +76,6 @@ new class extends Component
 
 				<!-- Events: Collection -->
 				@foreach($this->events as $event)
-
-				<!-- Temp Policy Test -->
-				@can('delete', $event)
-					<!-- <div>Update test</div> -->
-				@endcan
-
 				<a href="{{ route('event.show', $event->id) }}" class="group" wire:key="event-{{ $event->id }}">
 					<div class="border rounded-lg cursor-pointer overflow-hidden transition delay-2s group-hover:bg-gray-800">
 						<div class="bg-gray-600 relative justify-center aspect-3/2 w-full">
@@ -94,6 +102,50 @@ new class extends Component
 				@endforeach
 
 			</div>
+
+			<!-- Pagination -->
+			<div class="mt-4 mb-15">{{ $this->events->links() }}</div>
+
+			<!-- Passed Events: title -->
+			<h2 class="text-xl styling-h mb-8 mx-auto text-center">
+				<div class="flex items-center gap-2">
+					<span><flux:icon.clock variant="outline" class="size-6" /></span>
+					<span>Net gemist</span>
+				</div>
+			</h2>
+
+			<!-- Passed Events: All -->
+			<div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-2">
+
+				<!-- Passed Events: Collection -->
+				@foreach($this->passedEvents as $event)
+				<a href="{{ route('event.show', $event->id) }}" class="group" wire:key="event-{{ $event->id }}">
+					<div class="border rounded-lg cursor-pointer overflow-hidden transition delay-2s group-hover:bg-gray-800">
+						<div class="bg-gray-600 relative justify-center aspect-3/2 w-full">
+							@if($event->hasMedia('banners'))
+							<img 
+                        src="{{ $event->getFirstMediaUrl('banners', 'thumb') }}" 
+                        class="absolute inset-0 object-cover w-full h-full" 
+                        alt="{{ $event->title }}"
+                     >
+							@else
+							<flux:icon.photo variant="solid" class="size-20 text-gray-400" />
+							@endif
+						</div>
+						<div class="p-2 text-center">
+							<p class="text-xs text-gray-400">#{{ $event->category->name }}</p>
+							<h2 class="text-md font-semibold line-clamp-1 mb-1">{{ $event->title }}</h2>
+							<div class="line-clamp-1">
+								<span class="text-sm sm:text-xs color-main rounded-md px-2 py-0.5 mr-2">{{ $event->start_time->format('d M') }}</span>
+								<span wire:poll.60s class="text-sm">{{ $this->countdown($event) }}</span>
+							</div>
+						</div>
+					</div>
+				</a>
+				@endforeach
+
+			</div>
+
 		</section>
 
 	</div>

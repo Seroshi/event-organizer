@@ -14,10 +14,6 @@ new class extends Component
 {
    public $eventId;
 
-   public function mount(): void
-   {
-   }
-
    // Find the corresponding statistic based on Event HasOne relationship
    #[Computed] 
    public function statistic(): ?Statistic //return null if not found
@@ -93,7 +89,7 @@ new class extends Component
       }
    }
 
-   public function liked()
+   public function liked(): void
    {
       $statistic = $this->statistic();
 
@@ -101,9 +97,11 @@ new class extends Component
 
          $userId = auth()->user()?->id;
 
+         // Redirect users to the login page in order to like
          if(!$userId)
          {
-            return dd('Please log in');
+            $this->redirectRoute(guest('login'));
+            return;
          }
          else
          {
@@ -117,16 +115,20 @@ new class extends Component
 
             $newLikesArray = [];
 
-            // Update likes array if a new user has liked
+            // Unlike when current user already exists
             if($exists){
 
-               $liked = false;
+               // Making sure an unlike happens
+               $liked = false; 
 
+               // Remove current user from the liked list
                $newLikesArray = collect($likesArray)->where('userId', '!=', $userId)->all();
-
             }
+
+            // Like when a new user is found
             else
             {
+               // 1 Making sure a like happens
                $liked = true;
 
                // 2 Define likes data with the correct types
@@ -139,11 +141,13 @@ new class extends Component
                $newLikesArray = [...$likesArray, ...$likeData];
             }
 
+            // Handles the like/unlike update 
             $updateStatistic = app(StatisticService::class)->updateLikeStatistic($statistic, $newLikesArray, $likeCount, $liked);
 
             if(!$updateStatistic){
                session()->flash('error', 'Er is iets misgegaan bij het bijwerken van een like.');
             }else{
+               // Making sure the like count is most recent
                $likeCount = (int) $statistic->likes;
             }
          }

@@ -20,13 +20,6 @@ new class extends Component
       ($user) ? $this->profile = $user : null;
    }
 
-   // Display the event countdown text
-   #[Computed]
-   public function countdown(): string
-   {
-      return app(EventService::class)->getSmartCountdown($this->event);;
-	}
-
    // Display the organizer or company name
    #[Computed]
    public function organizerName(): string
@@ -76,7 +69,7 @@ new class extends Component
             {{ $this->event->getFirstMedia('banners') }}
             @else
             <div class="bg-gray-600 flex items-center justify-center aspect-video w-full">
-                <flux:icon.photo variant="solid" class="size-20 text-gray-400" />
+               <flux:icon.photo variant="solid" class="size-20 text-gray-400" />
             </div>
             @endif
          </div>
@@ -92,8 +85,22 @@ new class extends Component
 
          <!-- Event data & countdown -->
          <div class="mb-6">
-            <p class="color-main inline-block rounded-sm px-2 py-0.5">{{ $this->event->start_time->format('D d M Y') }}</p>
-            <span wire:poll.60s class="text-gray-400 ml-2">{{ $this->countdown }}</span>
+            @if(!$this->event->end_time || $this->event->start_time->format('dm') === $this->event->end_time->format('dm'))
+            <p class="color-main inline-block rounded-sm px-2 py-0.5">
+               {{ $this->event->start_time->format('D d M Y') }}
+            </p>
+            @else
+            <span class="color-main inline-block rounded-sm px-2 py-0.5">
+               {{ $this->event->start_time->format('D d M') }}
+               <span> - </span>
+               {{ $this->event->end_time->format('D d M Y') }}
+            </span>
+            @endif
+            <span wire:poll.60s class="text-gray-400 ml-2">{{ $this->event->getSmartCountdown }}</span>
+            <div class="text-lg pt-1 flex items-center gap-1">
+               <flux:icon.clock variant="outline" class="size-6 text-gray-400" />
+               <span>{{ $this->event->start_time->format('H:i') }}</span>
+            </div>
          </div>
 
          <!-- Event content -->

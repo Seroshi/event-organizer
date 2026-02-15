@@ -81,7 +81,7 @@ class EventService
       $text = ($past) ? ' geleden' : ' te gaan'; 
 
       // Check if event is ungoing
-      if($past && $end && !$now->greaterThan($end)){
+      if($now->greaterThan($start) && !$now->greaterThan($end)){
          return 'Nu aan de gang';
       }
 

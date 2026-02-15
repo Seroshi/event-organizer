@@ -43,12 +43,12 @@ class EventPolicy
      */
     public function update(User $user, Event $event): bool
     {
-        // Superadmin/Admins can delete anything
+        // Superadmin/Admins can update anything
         if ($user->role->accessLevel() === 'full-access') {
             return true;
         }
 
-        // Organizers can only delete if they own the event
+        // Organizers can only update if they own the event
         if ($user->role->accessLevel() === 'creator-access') {
             return $user->id === $event->user_id; 
         }

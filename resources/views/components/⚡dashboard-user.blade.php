@@ -17,6 +17,7 @@ new class extends Component
    use WithPagination;
 
    public $userId = null;
+   public $userProfile = null;
    public $userRole = 'user';
    public $userName = '';
    public $roleOptions;
@@ -25,12 +26,6 @@ new class extends Component
    {
       // Assign role options from the enum static function
       $this->roleOptions = UserRole::options();
-   }
-
-   #[Computed]
-   public function user(): User
-   {
-      return User::findOrFail();
    }
 
    public function getUserData($id): void
@@ -43,6 +38,7 @@ new class extends Component
 
       // 3 Assign the user data to the form variables
       $this->userId = $user->id;
+      $this->userProfile = $user->profile;
       $this->userName = $user->name;
       $this->userRole = $user->role->value;
    }
@@ -70,10 +66,13 @@ new class extends Component
    #[Computed]
    public function getUserRoles(): ?LengthAwarePaginator
    {
+      // Decide pagination limit per page
+      $paginateLimit = 33;
+
       try{
          return User::where('id', '!=', auth()->id())
             ->orderByRaw("FIELD(role, 'master', 'admin', 'organizer', 'user')")
-            ->paginate(33, pageName: 'users');
+            ->paginate($paginateLimit, pageName: 'users');
       } catch (\Exception $e){
          report($e);
          session()->flash('error', 'De gebruikerslijst kon niet worden geladen.');
@@ -109,9 +108,9 @@ new class extends Component
          <span>Alle gebruikers ({{ $this->userCount }})</span>
       </h2>
       <div class="text-lg sm:text-sm bg-zinc-700 rounded-lg py-2 pl-2 pr-1">
-         <div class="h-83 sm:h-59.5 overflow-y-auto hide-scrollbar-until-hover">
+         <div class="h-105 sm:h-59.5 overflow-y-auto hide-scrollbar-until-hover">
             @foreach($this->getUserRoles as $user)
-            <a wire:click="getUserData({{ $user->id }})" href="#"
+            <a wire:click="getUserData({{ $user->id }})" wire:click.prevent href="#"
                class="flex justify-between rounded-md hover:bg-gray-600 cursor-pointer px-2 py-1 "
             >
                <p>{{ $user->name }}</p>
@@ -122,7 +121,7 @@ new class extends Component
             @endforeach
          </div>
       </div>
-      <div class="mt-2">{{ $this->getUserRoles()->links() }}</div>
+      <div class="mt-2">{{ $this->getUserRoles()->links(data: ['scrollTo' => false]) }}</div>
    </section>
 
    <!-- Modal: Edit User Role -->
@@ -135,6 +134,16 @@ new class extends Component
             <flux:icon.user variant="outline" class="size-5" />
             <span>{{ $this->userName }}</span>
          </h3>
+         <div class="w-35 sm:w-25 aspect-square rounded-full flex items-center overflow-hidden justify-center bg-zinc-500 border-3 border-gray-300 inset-shadow-zinc-300 mt-1">
+            @if($this->userProfile?->hasMedia('profiles'))
+            <img src="{{ $this->userProfile?->getFirstMediaUrl('profiles', 'thumb') }}" 
+               class="aspect-square object-cover" 
+               alt="profile-image"
+            >
+            @else
+               <flux:icon.user-circle variant="solid" class="size-26 text-gray-400" />
+            @endif
+         </div>
          <div class="mb-4"></div>
 
          <!-- Modal: Role selection -->

@@ -1,8 +1,11 @@
 <?php
 
+use Illuminate\Support\Collection;
+
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\Attributes\Computed;
+
 use App\Services\EventService;
 use App\Models\Event;
 
@@ -37,7 +40,7 @@ new class extends Component
     }
 
     // Process the form data upon button click
-    function save(EventService $service)
+    function save(EventService $service): void
     {
         // Validate all form fields
         $validated = $this->validate(
@@ -72,6 +75,8 @@ new class extends Component
             // Dispatch a success notification
             session()->flash('success', 'Evenement succesvol aangemaakt!');
 
+            $this->redirectRoute('event.list', navigate: true);
+            return;
         } 
 
         else{
@@ -84,34 +89,39 @@ new class extends Component
 
             // Dispatch a success notification
             session()->flash('success', 'Evenement succesvol aangepast!');
-            
+
+            $this->redirectRoute('event.show', $newEvent->id, navigate: true);
+            return;
         } 
-        
-        return $this->redirectRoute('event.list', navigate: true);
     }
 
     #[Computed]
-    public function allCategories(){ 
+    public function allCategories(): Collection
+    { 
         return \App\Models\Category::all(); 
     }
 
     #[Computed]
-    public function title(){ 
+    public function title(): string
+    { 
         return $this->event ? 'Bewerk deze evenement' : 'Evenement aanmaken'; 
     }
 
     #[Computed]
-    public function titleIcon(){ 
+    public function titleIcon(): string
+    { 
         return $this->event ? 'pencil-square' : 'plus'; 
     }
 
     #[Computed]
-    public function statusLabel(){
+    public function statusLabel(): string
+    {
         return $this->status ? 'Evenement zichtbaar' : 'Evenement verborgen';
     }
 
     #[Computed]
-    public function formButton(){ 
+    public function formButton(): string
+    { 
         return $this->event ? 'Update evenement' : 'Creëer evenement'; 
     }
 };
@@ -224,16 +234,5 @@ new class extends Component
         </form>
 
     </section>
-
-    <script type="module">
-        import { Editor } from 'https://esm.sh/@tiptap/core'
-        import StarterKit from 'https://esm.sh/@tiptap/starter-kit'
-
-        new Editor({
-            element: document.querySelector('.element'),
-            extensions: [StarterKit],
-            content: '<p>Hello from CDN!</p>',
-        })
-    </script>
 
 </div>

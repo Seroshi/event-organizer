@@ -58,7 +58,7 @@ enum UserRole: string
    public function labelColor(): string
    {
       return match($this) {
-         self::Admin       => 'bg-orange-600',
+         self::Admin       => 'bg-orange-500',
          self::Organizer   => 'color-sub',
          default           => 'bg-teal-700',
       };

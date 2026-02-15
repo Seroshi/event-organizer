@@ -13,6 +13,8 @@ use App\Models\User;
 
 new class extends Component
 {
+   use WithFileUploads;
+   
    public $profile = null;
    public $profileImage = null;
    public $profileName = '';
@@ -21,8 +23,7 @@ new class extends Component
 
    public function mount(): void
    {
-      $profile = Profile::where('user_id', auth()->user()->id)->first();
-      $this->profile = $profile;
+      $this->profile = auth()->user()?->profile;
    }
 
    public function getProfileData(): void
@@ -37,7 +38,7 @@ new class extends Component
       }
    }
 
-   public function profileSave(DashboardService $service)
+   public function profileSave(DashboardService $service): void
    {
       // Validate all profile form fields
       $validated = $this->validate(
@@ -65,7 +66,6 @@ new class extends Component
       session()->flash('success', 'Profiel succesvol aangepast!');
 
       $this->redirectRoute('dashboard', navigate: true);
-
       return;
    }
 
