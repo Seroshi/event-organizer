@@ -25,13 +25,16 @@ new class extends Component
 		$userId = auth()->user()->id;
 
 		// Get all event ids liked by this user
-		$groupId = Statistic::whereJsonContains('user_likes', ['userId' => $userId])
+		$groupId = Statistic::where('user_likes', 'LIKE', '%"userId":' . $userId . '%')
+    		->orWhere('user_likes', 'LIKE', '%"userId": ' . $userId . '%')
 			->orderBy('updated_at', 'desc')
     		->pluck('event_id');
 
 		// Grab all user favourited events	
 		return Event::whereIn('id', $groupId)
-			->orderByRaw("FIELD(id, " . implode(',', $groupId->toArray()) . ")")
+			->orderByRaw("CASE WHEN id IS NULL THEN 1 ELSE 0 END, CASE " . 
+				$groupId->map(fn($id, $index) => "WHEN id = {$id} THEN {$index}")->implode(' ') . 
+				" END")
 			->paginate($paginateLimit, pageName: 'favourites');
 	}
 };

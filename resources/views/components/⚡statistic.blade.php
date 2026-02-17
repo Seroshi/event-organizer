@@ -20,9 +20,9 @@ new class extends Component
    {
       $eventId = $this->eventId;
 
-      $event = Event::findOrFail($eventId);
+      $event = Event::find($eventId);
 
-      $statistic = $event->statistic;
+      $statistic = $event?->statistic;
 
       if($statistic)
       {
@@ -100,7 +100,7 @@ new class extends Component
          // Redirect users to the login page in order to like
          if(!$userId)
          {
-            $this->redirectRoute(guest('login'));
+            $this->redirectRoute('login');
             return;
          }
          else
@@ -152,6 +152,7 @@ new class extends Component
             }
          }
       }
+      
    }
 
    #[Computed] 

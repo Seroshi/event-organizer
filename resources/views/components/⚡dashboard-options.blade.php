@@ -34,7 +34,7 @@ new class extends Component
 
       return [
          'number'  => $count . ' ',
-         'text' => ($count > 1) ? 'evenementen' : 'evenement',
+         'text' => ($count === 1) ? 'evenement' : 'evenementen',
       ];
    }
 };

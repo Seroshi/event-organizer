@@ -13,13 +13,11 @@ class CategorySeeder extends Seeder
      */
     public function run(): void
     {
-        $categories = ['Actie', 'Anime', 'Cultuur', 'Eten', 'Educatie', 'Entertainment', 'Games', 'Geschiedenis', ' Musea', 'Music', 'Musical', 'Familie', 'Social', 'Sport', 'Workshop'];
-
-        foreach ($categories as $name) {
-            Category::create([
-                'name' => $name,
-                'slug' => str($name)->slug(),
-            ]);
+        foreach (Category::TYPES as $name) {
+            Category::updateOrCreate(
+                ['name' => $name],
+                ['slug' => str($name)->slug()]
+            );
         }
     }
 }

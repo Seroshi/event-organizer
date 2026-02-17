@@ -78,7 +78,7 @@ new class extends Component
 				@foreach($this->events as $event)
 				<a href="{{ route('event.show', $event->id) }}" class="group" wire:key="event-{{ $event->id }}">
 					<div class="border rounded-lg cursor-pointer overflow-hidden transition delay-2s group-hover:bg-gray-800">
-						<div class="bg-gray-600 relative justify-center aspect-3/2 w-full">
+						<div class="bg-gray-600 relative flex items-center justify-center aspect-3/2 w-full">
 							@if($event->hasMedia('banners'))
 							<img 
                         src="{{ $event->getFirstMediaUrl('banners', 'thumb') }}" 
@@ -121,7 +121,7 @@ new class extends Component
 				@foreach($this->passedEvents as $event)
 				<a href="{{ route('event.show', $event->id) }}" class="group" wire:key="event-{{ $event->id }}">
 					<div class="border rounded-lg cursor-pointer overflow-hidden transition delay-2s group-hover:bg-gray-800">
-						<div class="bg-gray-600 relative justify-center aspect-3/2 w-full">
+						<div class="bg-gray-600 relative flex items-center justify-center aspect-3/2 w-full">
 							@if($event->hasMedia('banners'))
 							<img 
                         src="{{ $event->getFirstMediaUrl('banners', 'thumb') }}" 

@@ -25,6 +25,9 @@ new class extends Component
 
 	public function mount(): void
 	{
+		if(auth()->user()->role == UserRole::User){
+			abort(403, 'U heeft geen toegang tot deze pagina.');
+		}
 		// To check if events are more than 8 items
 		if($this->allEvents->count() >= 8) $this->eventMax = true;
 	}
@@ -38,7 +41,7 @@ new class extends Component
 		}
 
 		// Toggle sorting to asc as well as the icon
-		elseif($this->order === 'desc' && $this->column == $column){
+		elseif($this->order === 'desc' && $this->column === $column){
 			$this->order = 'asc';
 			$this->iconShow = 'chevron-up';
 		}
@@ -71,12 +74,12 @@ new class extends Component
 					->whereColumn('event_id', 'events.id')
 					->limit(1), $this->order
 				)
-				->paginate($paginateLimit, pageName: 'events');
+				->paginate($paginateLimit ?? 33, pageName: 'events');
 		}
 		// Get sorted events based on the creation date
 		else{
 			return $events->orderBy('created_at', $this->order)
-			->paginate($paginateLimit, pageName: 'events');
+			->paginate($paginateLimit ?? 33, pageName: 'events');
 		}
 	}
 
@@ -129,7 +132,7 @@ new class extends Component
 				</div>
 			</div>
          <div class="h-105 sm:h-48.5 overflow-y-auto hide-scrollbar-until-hover">
-				@foreach($this->allEvents as $index => $event)
+				@forelse($this->allEvents as $index => $event)
 				<div class="flex justify-between gap-2 pb-2 sm:pb-1 {{($event->is_still_active) ? 'text-gray-100' : 'text-gray-300'}} ">
 					<span class="w-5">{{ $index + 1 }}.</span>
 					<a href="{{ route('event.show', $event->id) }}" class="line-clamp-1 w-[60%] hover:text-gray-400">
@@ -153,7 +156,9 @@ new class extends Component
 						</p>
 					</div>
 				</div>
-				@endforeach
+				@empty
+				<p class="text-gray-300 mt-1">Geen evenement nog om te tonen.</p>
+				@endforelse
         	</div>
 		</div>
 

@@ -72,11 +72,11 @@ new class extends Component
       try{
          return User::where('id', '!=', auth()->id())
             ->orderByRaw("FIELD(role, 'master', 'admin', 'organizer', 'user')")
-            ->paginate($paginateLimit, pageName: 'users');
+            ->paginate($paginateLimit ?? 33, pageName: 'users');
       } catch (\Exception $e){
          report($e);
          session()->flash('error', 'De gebruikerslijst kon niet worden geladen.');
-         return new LengthAwarePaginator([], 0, 0);
+         return new LengthAwarePaginator([], 0, 33);
       }
    }
 

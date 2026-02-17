@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -19,7 +20,7 @@ use App\Services\EventService;
 
 class Event extends Model implements HasMedia
 {
-   use SoftDeletes, InteractsWithMedia;
+   use HasFactory, SoftDeletes, InteractsWithMedia;
 
    protected $guarded = [];  
 
