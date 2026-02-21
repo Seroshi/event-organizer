@@ -9,8 +9,7 @@
    style="display: none;"
 >
 
-   <div class="fixed w-screen h-screen top-0 left-0 flex justify-center items-center backdrop-blur-[20px] z-60 px-2" 
-      background:rgba(0,0,0,1);"
+   <div class="fixed w-screen h-screen top-0 left-0 flex justify-center items-center bg-zinc-900/40 backdrop-blur-[20px] z-60 px-2"
    >
       <div class="bg-zinc-700 py-6 pl-6 mr-3 my-4 rounded-xl border border-zinc-800 w-[90%] max-h-[90vh] flex flex-col md:max-w-xl relative" 
          @click.away="showModal = true"

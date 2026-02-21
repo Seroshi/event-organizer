@@ -7,12 +7,29 @@ use App\Livewire\Actions\Logout;
 
 new class extends Component
 {
+    /**
+     * Allow logout with the logout button 
+     */
     public function logout(Logout $logout): void
     {
         // Logout through a livewire action that triggers __invoke 
         $logout();
         
         $this->redirect('/', navigate: true);
+    }
+
+    /**
+     * Decide the user route of the switch button  
+     */
+    #[Computed]
+    public function account() 
+    {
+        $role = auth()->user()?->role->value;
+
+        if($role === 'admin') return 'organizer';
+        elseif($role === 'organizer') return 'user';
+        elseif($role === 'user') return 'admin';
+        else return 'admin';
     }
 };
 ?>
@@ -40,12 +57,12 @@ new class extends Component
                         <flux:icon.home variant="outline" class="size-7 md:size-5" />
                         <span>Home</span>
                     </a>
-                    @auth
+                    @if(auth()->user())
                     <a href="{{ route('dashboard') }}" class="color-main hover-color-main px-2 py-2 rounded-md w-full flex items-center gap-4 md:gap-1  md:w-auto">
                         <flux:icon.squares-2x2 variant="outline" class="size-7 md:size-5" />
                         <span>Dashboard</span>
                     </a>
-                    @endauth
+                    @endif
                 </div>
             </div>
 
@@ -63,6 +80,16 @@ new class extends Component
                 @endif
             </div>
 
+        </div>
+
+        <!-- Switch user mode -->
+        <div class="flex w-full justify-end pt-3 pr-2">
+            <div class="inline-flex bg-zinc-700 hover:bg-white backdrop-blur-[20px] rounded-md px-3 py-1">
+                <a href="{{route('account.switch', $this->account)}}" class="flex gap-1 items-center text-gray-300 hover:text-gray-700 group">
+                    <flux:icon.arrow-path variant="outline" class="size-6 md:size-4 transition-transform duration-500 group-hover:rotate-180" />
+                    <span>account wissel</span>
+                </a>
+            </div>
         </div>
 
     </div>

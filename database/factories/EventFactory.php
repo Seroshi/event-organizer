@@ -26,7 +26,7 @@ class EventFactory extends Factory
 
         return [
             'title' => fake()->sentence(),
-            'user_id' => User::factory(),
+            'user_id' => User::Factory(),
             'category_id' => Category::factory(),
             'start_time' => $start,
             'end_time' => $end,

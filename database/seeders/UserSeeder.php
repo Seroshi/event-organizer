@@ -17,6 +17,7 @@ class UserSeeder extends Seeder
    {
 
       $people = [
+         [ 'name' => 'Jan van Karelson', 'role' => 'admin' ],
          [ 'name' => 'Laura Kauweling', 'role' => 'organizer' ],
          [ 'name' => 'Eric Messol', 'role' => 'organizer' ],
          [ 'name' => 'Tanja Groot', 'role' => 'admin' ],
@@ -29,13 +30,6 @@ class UserSeeder extends Seeder
          [ 'name' => 'Peter Molen' ],
          [ 'name' => 'Patrick Noot' ],
       ];
-      
-      User::create([
-         'name' => 'Steven Yap',
-         'email' => 'test@test.nl',
-         'password' => bcrypt('testinglocally'),
-         'role' => 'admin'
-      ]);
 
       foreach($people as $index => $person){
 

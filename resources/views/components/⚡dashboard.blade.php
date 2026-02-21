@@ -2,17 +2,17 @@
 
 use Livewire\Component;
 use Livewire\Attributes\Computed;
+use App\Models\Event;
 
 new class extends Component
 {
    
-
 };
 ?>
 
 <div class="w-full sm:w-2xl md:w-3xl lg:w-4xl mx-auto px-12 py-6">
 
-   <div class="flex gap-5 items-center flex-wrap mb-6">
+   <div class="flex gap-5 items-center flex-wrap pt-4 mb-6">
 
       <livewire:dashboard-profile />
 

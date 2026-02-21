@@ -53,7 +53,7 @@ class EventService
       try{
          return $event->delete();
       } catch (\Exception $e){
-         Log::error('Failed to delete event: ' . $e.getMessage());
+         report($e);
          return false;
       }
 
@@ -67,11 +67,14 @@ class EventService
       try{
          return $event->restore();
       } catch (\Exception $e){
-         Log::error('Failed to delete event: ' . $e.getMessage());
+         report($e);
          return false;
       }
    }
 
+   /**
+    * Handle the logic for displaying the Event's amount of time left 
+    */
    public function getSmartCountdown(Event $event): string
    {
       $now = now();
@@ -92,9 +95,8 @@ class EventService
       else {
          return $start->diffForHumans($now, true) . $text;
       }
-      
    }
-
+   
    /**
     * Handle the logic for uploading an image with Spatie Media.
     */
@@ -103,5 +105,6 @@ class EventService
       // Spatie handles the TemporaryUploadedFile automatically
       return $event->addMedia($file)->toMediaCollection('banners');
    }
+   
    
 }

@@ -6,8 +6,9 @@ use App\Models\Statistic;
 use Livewire\Livewire;
 
 test('guests cannot like an event and need to login', function () {
-    $event = Event::factory()->create();
 
+    $event = Event::factory()->create();
+    
     // Will create a statistic record
     $response = $this->get(route('event.show', $event->id));
 

@@ -13,6 +13,7 @@ new class extends Component
 
    public function mount(Event $event): void
    {
+      if(!$event) abort(404);
       $this->event = $event;
 
       $userId = $event->user_id;

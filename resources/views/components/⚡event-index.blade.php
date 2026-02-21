@@ -4,7 +4,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 use Livewire\Component;
-use Livewire\Attributes\Computed;
+use Livewire\Attributes\{Computed, On};
 use Livewire\WithPagination;
 
 use App\Services\EventService;
@@ -13,6 +13,12 @@ use App\Models\Event;
 new class extends Component
 {
 	use WithPagination;
+	
+	#[On('refresh-event-index')]
+	public function refreshComponent(): void
+	{
+		// Will trigger a reset if called, can remain empty
+	}
 
 	#[Computed]
 	public function events(): LengthAwarePaginator
@@ -21,7 +27,7 @@ new class extends Component
 		return Event::with('media')
 			->isActive()
 			->orderBy('start_time','asc')
-			->paginate($paginateLimit);
+			->paginate($paginateLimit ?? 6);
 	}
 
 	#[Computed] 
@@ -45,7 +51,7 @@ new class extends Component
 
 		@auth
 		<section class="mb-6 text-center text-sm">
-			<p class="text-gray-400">Admin opties:</p>
+			<p class="text-gray-400">{{ auth()->user()->role->label() }} opties:</p>
 			<div class="inline-block">
 				<div class="flex justify-center rounded-md gap-1 p-1 bg-gray-700">
 					<a href="{{ route('event.list') }}" class="flex gap-1 items-center bg-zinc-800 hover:bg-gray-500 transition delay-2s px-2 py-1 rounded-md">
@@ -107,12 +113,14 @@ new class extends Component
 			<div class="mt-4 mb-15">{{ $this->events->links() }}</div>
 
 			<!-- Passed Events: title -->
-			<h2 class="text-xl styling-h mb-8 mx-auto text-center">
-				<div class="flex items-center gap-2">
-					<span><flux:icon.clock variant="outline" class="size-6" /></span>
-					<span>Net gemist</span>
-				</div>
-			</h2>
+			@if($this->passedEvents->count() > 0)
+				<h2 class="text-xl styling-h mb-8 mx-auto text-center">
+					<div class="flex items-center gap-2">
+						<span><flux:icon.clock variant="outline" class="size-6" /></span>
+						<span>Net gemist</span>
+					</div>
+				</h2>
+			@endif
 
 			<!-- Passed Events: All -->
 			<div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-2">

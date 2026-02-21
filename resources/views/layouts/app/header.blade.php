@@ -8,6 +8,8 @@
     <body class="min-h-screen bg-white dark:bg-zinc-800">
         <livewire:navbar />
 
+        <livewire:welcome-modal />
+
         {{ $slot }}
 
         @fluxScripts
