@@ -60,7 +60,7 @@ new class extends Component
       <section class="text-sm text-gray-400 flex gap-1 items-center mb-10">
          <a href="{{ route('event.index') }}" class="hover:text-gray-200">Evenementen</a>
          <flux:icon.chevron-right variant="solid" class="size-4" />
-         <span class="text-gray-200">{{ $this->event->title }}</span>
+         <span class="text-gray-200 line-clamp-1">{{ $this->event->title }}</span>
       </section>
 
       <section>

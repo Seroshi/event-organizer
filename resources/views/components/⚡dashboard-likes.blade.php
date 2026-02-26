@@ -52,7 +52,7 @@ new class extends Component
          <span>Favoriete evenementen</span>
       </h2>
 
-      <div class="text-lg sm:text-sm bg-zinc-700 rounded-lg p-2">
+      <div class="text-md sm:text-sm bg-zinc-700 rounded-lg p-2">
          <div class="h-125 sm:h-59.5 overflow-y-auto hide-scrollbar-until-hover">
 			@foreach($this->allEvents as $event)
 			<a href="{{ route('event.show', $event->id) }}" class="flex gap-2 hover:bg-gray-600 rounded-md cursor-pointer p-1">

@@ -38,6 +38,7 @@ new class extends Component
     <div class="color-main relative w-full border-b border-gray-100 h-16.5 z-50">
         <div class="text-xl md:text-sm flex justify-between h-16">
             <div class="flex">
+                
                 <div class="flex items-center md:hidden ml-3">
                     <button @click="mobile =! mobile" class="inline-flex items-center justify-center p-1 rounded-md text-gray-100 hover:text-gray-500 hover:bg-gray-100 focus:outline-none transition">
                         {{-- Switch icons based on "mobile" state --}}
@@ -47,10 +48,12 @@ new class extends Component
                         </svg>
                     </button>
                 </div>
+
                 <a href="{{ route('event.index') }}" class="relative left-2 md:left-5 flex items-center font-bold aspect-3/2 mr-3 z-60">
                     <x-app-logo-icon />
                 </a>
-                <div class="left-0 pl-0.5 md:pl-5 absolute md:relative -translate-x-full md:translate-x-0 md:translate-y-0 transition-all duration-300 color-main flex w-sm md:w-full items-center"
+
+                <div class="z-50 left-0 pl-0.5 md:pl-5 absolute md:relative -translate-x-full md:translate-x-0 md:translate-y-0 transition-all duration-300 color-main flex w-sm md:w-full items-center"
                     :class="mobile ? 'translate-x-0 flex-wrap translate-y-16.5' : '-translate-x-full flex-wrap md:translate-x-0 translate-y-16.5'"
                 >
                     <a href="{{ route('event.index') }}" class="color-main hover-color-main px-2 py-2 rounded-md w-full flex items-center gap-4 md:gap-1 md:w-auto">

@@ -49,7 +49,7 @@ new class extends Component
          </span>
          <span>Evenement opties</span>
       </h2>
-      <div class="text-lg sm:text-sm bg-zinc-700 rounded-lg py-4 px-4">
+      <div class="text-md sm:text-sm bg-zinc-700 rounded-lg py-4 px-4">
          <div class="sm:h-55.5 flex flex-col gap-3">
             
             @admin

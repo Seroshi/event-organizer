@@ -107,7 +107,7 @@ new class extends Component
          </span>
          <span>Alle gebruikers ({{ $this->userCount }})</span>
       </h2>
-      <div class="text-lg sm:text-sm bg-zinc-700 rounded-lg py-2 pl-2 pr-1">
+      <div class="text-md sm:text-sm bg-zinc-700 rounded-lg py-2 pl-2 pr-1">
          <div class="h-105 sm:h-59.5 overflow-y-auto hide-scrollbar-until-hover">
             @foreach($this->getUserRoles as $user)
             <a wire:click="getUserData({{ $user->id }})" wire:click.prevent href="#"
