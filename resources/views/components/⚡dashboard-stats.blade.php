@@ -99,7 +99,7 @@ new class extends Component
          <span>Statistieken</span>
       </h2>
 
-      <div class="text-lg sm:text-sm bg-zinc-700 rounded-lg p-4 pr-2">
+      <div class="text-sm bg-zinc-700 rounded-lg p-4 pr-2">
 			<div class="flex justify-between gap-2 text-gray-400 border-b border-gray-300 pb-1 mb-1">
 				<div class="w-5">
 					<span>nr.</span>
@@ -121,7 +121,7 @@ new class extends Component
 						<flux:icon.chevron-up-down variant="outline" class="size-4" />
 						@endif
 					</div>
-					<div wire:click="toggleSort('likes')" class="{{($this->eventMax) ? 'w-13.5' : 'w-12'}} flex gap-0.5 hover:text-gray-100 items-center cursor-pointer">
+					<div wire:click="toggleSort('likes')" class="w-12 flex gap-0.5 hover:text-gray-100 items-center cursor-pointer">
 						<flux:icon.heart variant="outline" class="size-4" />
 						@if($this->column === 'likes')
 						<flux:icon :icon="$this->iconShow" variant="outline" class="size-4" />
@@ -136,7 +136,7 @@ new class extends Component
 				<div class="flex justify-between gap-2 pb-2 sm:pb-1 {{($event->is_still_active) ? 'text-gray-100' : 'text-gray-300'}} ">
 					<span class="w-5">{{ $index + 1 }}.</span>
 					<a href="{{ route('event.show', $event->id) }}" class="line-clamp-1 w-[60%] hover:text-gray-400">
-						<span class="inline-flex whitespace-nowrap bg-teal-700 rounded-md px-1 w-16 sm:w-13 py-0.3">
+						<span class="inline-flex whitespace-nowrap bg-teal-700 rounded-md px-1 w-13 py-0.3">
 							{{ $event->start_time->format('d M') }}
 						</span>
 						<span class="pl-0.5">{{ $event->title }}</span>

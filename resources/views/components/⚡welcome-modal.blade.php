@@ -33,7 +33,7 @@ new class extends Component
         <p class="mb-4">Voor deze demo is het mogelijk om van account types te wisselen, 
             puur en alleen om verschillende weergaves te tonen.
         </p>
-        <img src="{{ asset('account_wissel.jpg') }}" alt="account_wissel" width="100%" height="auto">
+        <img src="{{ asset('storage/account_wissel.jpg') }}" alt="account_wissel" width="100%" height="auto">
         <p class="mt-6 mb-2">Gebruik hiervoor de <strong>[ account wissel ]</strong> knop rechts bovenaan. Deze wisselt tussen de account types: </p>
         <ul>
             <li>Admin</li>

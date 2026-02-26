@@ -24,9 +24,11 @@ new class extends Component
         x-show="show" 
         x-init="setTimeout(() => show = false, 5000)"
         x-transition
-        class="fixed top-20 bg-green-600 text-white px-6 py-3 rounded shadow-lg w-xl z-60"
+        class="fixed top-10 text-white p-8 shadow-lg w-full sm:w-xl z-60"
     >
-        {{ session('success') }}
+        <div class="bg-green-600 rounded-md text-center px-6 py-3">
+            {{ session('success') }}
+        </div>
     </section>
     @endif
 

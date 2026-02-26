@@ -27,7 +27,7 @@ new class extends Component
 		return Event::with('media')
 			->isActive()
 			->orderBy('start_time','asc')
-			->paginate($paginateLimit ?? 6);
+			->paginate($paginateLimit ?? 6, pageName: 'events');
 	}
 
 	#[Computed] 

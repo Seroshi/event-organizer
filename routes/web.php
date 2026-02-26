@@ -23,8 +23,17 @@ Volt::route('/events/{event}', 'event-show')->name('event.show');
 
 Route::get('/switch-role/{role}', [Controllers\PortfolioController::class, 'switch'])->name('account.switch');
 
-// Route::view('dashboard', 'dashboard')
-//     ->middleware(['auth', 'verified'])
-//     ->name('dashboard');
+Route::get('/art/debug-clear', function() {
+    // This is the most important one for the data-update-uri
+    Artisan::call('view:clear');
+    
+    // This ensures your config/livewire.php changes are read
+    Artisan::call('config:clear');
+    
+    // Clear the general app cache
+    Artisan::call('cache:clear');
+    
+    return "Everything is cleared! Refresh the page now.";
+});
 
 require __DIR__.'/settings.php';
